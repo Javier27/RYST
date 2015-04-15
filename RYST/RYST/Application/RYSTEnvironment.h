@@ -10,4 +10,12 @@
 
 @interface RYSTEnvironment : NSObject
 
+// NSUserDefaults
+void RYSTUserDefaultsInit(void);
+NSString *RYSTUserDefaultsGetAuthToken(void);
+void RYSTUserDefaultsSetAuthToken(NSString * authToken);
+void RYSTUserDefaultsInvalidateAuthToken(void);
+BOOL RYSTUserDefaultsGetHasEverSignedIn(void);
+void RYSTUserDefaultsSetHasEverSignedIn(BOOL boolValue);
+
 @end

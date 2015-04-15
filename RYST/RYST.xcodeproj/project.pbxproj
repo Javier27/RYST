@@ -23,6 +23,9 @@
 		F31B5B481ADE1F3A00C3C332 /* RYSTAPIObjectManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B471ADE1F3A00C3C332 /* RYSTAPIObjectManager.m */; };
 		F31B5B4B1ADE1F6F00C3C332 /* RYSTAPIEndpoint.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B4A1ADE1F6F00C3C332 /* RYSTAPIEndpoint.m */; };
 		F31B5B4E1ADE1F8000C3C332 /* RYSTEnvironment.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B4D1ADE1F8000C3C332 /* RYSTEnvironment.m */; };
+		F31B5B511ADE1FD400C3C332 /* RYSTAPIEndpointRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B501ADE1FD400C3C332 /* RYSTAPIEndpointRequest.m */; };
+		F31B5B541ADE1FE200C3C332 /* RYSTAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B531ADE1FE200C3C332 /* RYSTAPIClient.m */; };
+		F31B5B571ADE1FF200C3C332 /* RYSTSessionController.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B561ADE1FF200C3C332 /* RYSTSessionController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +72,12 @@
 		F31B5B4A1ADE1F6F00C3C332 /* RYSTAPIEndpoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTAPIEndpoint.m; sourceTree = "<group>"; };
 		F31B5B4C1ADE1F8000C3C332 /* RYSTEnvironment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTEnvironment.h; sourceTree = "<group>"; };
 		F31B5B4D1ADE1F8000C3C332 /* RYSTEnvironment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTEnvironment.m; sourceTree = "<group>"; };
+		F31B5B4F1ADE1FD400C3C332 /* RYSTAPIEndpointRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTAPIEndpointRequest.h; sourceTree = "<group>"; };
+		F31B5B501ADE1FD400C3C332 /* RYSTAPIEndpointRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTAPIEndpointRequest.m; sourceTree = "<group>"; };
+		F31B5B521ADE1FE200C3C332 /* RYSTAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTAPIClient.h; sourceTree = "<group>"; };
+		F31B5B531ADE1FE200C3C332 /* RYSTAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTAPIClient.m; sourceTree = "<group>"; };
+		F31B5B551ADE1FF200C3C332 /* RYSTSessionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTSessionController.h; sourceTree = "<group>"; };
+		F31B5B561ADE1FF200C3C332 /* RYSTSessionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTSessionController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -179,10 +188,16 @@
 		F31B5B301ADE18E800C3C332 /* ModelControllers */ = {
 			isa = PBXGroup;
 			children = (
-				F31B5B461ADE1F3A00C3C332 /* RYSTAPIObjectManager.h */,
-				F31B5B471ADE1F3A00C3C332 /* RYSTAPIObjectManager.m */,
+				F31B5B521ADE1FE200C3C332 /* RYSTAPIClient.h */,
+				F31B5B531ADE1FE200C3C332 /* RYSTAPIClient.m */,
 				F31B5B491ADE1F6F00C3C332 /* RYSTAPIEndpoint.h */,
 				F31B5B4A1ADE1F6F00C3C332 /* RYSTAPIEndpoint.m */,
+				F31B5B4F1ADE1FD400C3C332 /* RYSTAPIEndpointRequest.h */,
+				F31B5B501ADE1FD400C3C332 /* RYSTAPIEndpointRequest.m */,
+				F31B5B461ADE1F3A00C3C332 /* RYSTAPIObjectManager.h */,
+				F31B5B471ADE1F3A00C3C332 /* RYSTAPIObjectManager.m */,
+				F31B5B551ADE1FF200C3C332 /* RYSTSessionController.h */,
+				F31B5B561ADE1FF200C3C332 /* RYSTSessionController.m */,
 			);
 			path = ModelControllers;
 			sourceTree = "<group>";
@@ -360,7 +375,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F31B5B541ADE1FE200C3C332 /* RYSTAPIClient.m in Sources */,
 				F31B5B381ADE195800C3C332 /* RYSTToken.m in Sources */,
+				F31B5B571ADE1FF200C3C332 /* RYSTSessionController.m in Sources */,
 				F31B5B4B1ADE1F6F00C3C332 /* RYSTAPIEndpoint.m in Sources */,
 				F31B5B3E1ADE196E00C3C332 /* RYSTVideo.m in Sources */,
 				F31B5B121ADE180400C3C332 /* ViewController.m in Sources */,
@@ -369,6 +386,7 @@
 				F31B5B0F1ADE180400C3C332 /* AppDelegate.m in Sources */,
 				F31B5B351ADE194500C3C332 /* RYSTAffirmation.m in Sources */,
 				F31B5B4E1ADE1F8000C3C332 /* RYSTEnvironment.m in Sources */,
+				F31B5B511ADE1FD400C3C332 /* RYSTAPIEndpointRequest.m in Sources */,
 				F31B5B0C1ADE180400C3C332 /* main.m in Sources */,
 				F31B5B3B1ADE196400C3C332 /* RYSTUploadResponse.m in Sources */,
 			);
