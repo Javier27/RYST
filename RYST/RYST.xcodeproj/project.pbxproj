@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		22D7B223C91B37870FE15366 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C30568D42D6E61CDE0EB4511 /* libPods.a */; };
 		F3BC0AD21ADE15D7002214DD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F3BC0AD11ADE15D7002214DD /* main.m */; };
 		F3BC0AD51ADE15D7002214DD /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F3BC0AD41ADE15D7002214DD /* AppDelegate.m */; };
 		F3BC0AD81ADE15D7002214DD /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F3BC0AD71ADE15D7002214DD /* ViewController.m */; };
@@ -27,6 +28,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		20B700CD2297CF482C3F206F /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "../Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		9A192053DAB29D611A767497 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "../Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		C30568D42D6E61CDE0EB4511 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3BC0ACC1ADE15D7002214DD /* RYST.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RYST.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3BC0AD01ADE15D7002214DD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F3BC0AD11ADE15D7002214DD /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -47,6 +51,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22D7B223C91B37870FE15366 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -60,12 +65,31 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		41232993B7E5F22C0DD0D62F /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				20B700CD2297CF482C3F206F /* Pods.debug.xcconfig */,
+				9A192053DAB29D611A767497 /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		75FF673A1F0A8FE118B133E0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C30568D42D6E61CDE0EB4511 /* libPods.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		F3BC0AC31ADE15D7002214DD = {
 			isa = PBXGroup;
 			children = (
 				F3BC0ACE1ADE15D7002214DD /* RYST */,
 				F3BC0AE81ADE15D7002214DD /* RYSTTests */,
 				F3BC0ACD1ADE15D7002214DD /* Products */,
+				41232993B7E5F22C0DD0D62F /* Pods */,
+				75FF673A1F0A8FE118B133E0 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -126,9 +150,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F3BC0AEF1ADE15D7002214DD /* Build configuration list for PBXNativeTarget "RYST" */;
 			buildPhases = (
+				1AD87BD95D9F897C74A44714 /* Check Pods Manifest.lock */,
 				F3BC0AC81ADE15D7002214DD /* Sources */,
 				F3BC0AC91ADE15D7002214DD /* Frameworks */,
 				F3BC0ACA1ADE15D7002214DD /* Resources */,
+				46DF9AC0C5218724EEB66431 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -213,6 +239,39 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1AD87BD95D9F897C74A44714 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		46DF9AC0C5218724EEB66431 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/../Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		F3BC0AC81ADE15D7002214DD /* Sources */ = {
@@ -341,6 +400,7 @@
 		};
 		F3BC0AF01ADE15D7002214DD /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 20B700CD2297CF482C3F206F /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = RYST/Info.plist;
@@ -351,6 +411,7 @@
 		};
 		F3BC0AF11ADE15D7002214DD /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9A192053DAB29D611A767497 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = RYST/Info.plist;
@@ -412,6 +473,7 @@
 				F3BC0AF11ADE15D7002214DD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F3BC0AF21ADE15D7002214DD /* Build configuration list for PBXNativeTarget "RYSTTests" */ = {
 			isa = XCConfigurationList;
@@ -420,6 +482,7 @@
 				F3BC0AF41ADE15D7002214DD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
