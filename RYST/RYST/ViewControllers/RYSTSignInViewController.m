@@ -10,6 +10,7 @@
 #import "RYSTSessionController.h"
 #import "RYSTEnvironment.h"
 #import "RYSTIntroViewController.h"
+#import "RYSTVideoViewController.h"
 #import "UIView+RJDConvenience.h"
 
 @interface RYSTSignInViewController ()
@@ -82,7 +83,7 @@
 
   }
 
-  RYSTIntroViewController *mainVC = [[RYSTIntroViewController alloc] init];
+  RYSTVideoViewController *mainVC = [[RYSTVideoViewController alloc] init];
   [self presentViewController:mainVC animated:YES completion:nil];
 
   //  if (self.usernameTextField.text.length > 0) {

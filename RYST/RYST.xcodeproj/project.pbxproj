@@ -29,6 +29,7 @@
 		F31B5B5D1ADE270A00C3C332 /* RYSTBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B5C1ADE270A00C3C332 /* RYSTBaseViewController.m */; };
 		F31B5B601ADE2A5200C3C332 /* RYSTSignInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B5F1ADE2A5200C3C332 /* RYSTSignInViewController.m */; };
 		F31B5B631ADE2A6200C3C332 /* RYSTIntroViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B621ADE2A6200C3C332 /* RYSTIntroViewController.m */; };
+		F31B5B661ADE2ECC00C3C332 /* RYSTVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B651ADE2ECC00C3C332 /* RYSTVideoViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,6 +88,8 @@
 		F31B5B5F1ADE2A5200C3C332 /* RYSTSignInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTSignInViewController.m; sourceTree = "<group>"; };
 		F31B5B611ADE2A6200C3C332 /* RYSTIntroViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTIntroViewController.h; sourceTree = "<group>"; };
 		F31B5B621ADE2A6200C3C332 /* RYSTIntroViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTIntroViewController.m; sourceTree = "<group>"; };
+		F31B5B641ADE2ECC00C3C332 /* RYSTVideoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTVideoViewController.h; sourceTree = "<group>"; };
+		F31B5B651ADE2ECC00C3C332 /* RYSTVideoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTVideoViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -220,6 +223,8 @@
 				F31B5B5F1ADE2A5200C3C332 /* RYSTSignInViewController.m */,
 				F31B5B611ADE2A6200C3C332 /* RYSTIntroViewController.h */,
 				F31B5B621ADE2A6200C3C332 /* RYSTIntroViewController.m */,
+				F31B5B641ADE2ECC00C3C332 /* RYSTVideoViewController.h */,
+				F31B5B651ADE2ECC00C3C332 /* RYSTVideoViewController.m */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -402,6 +407,7 @@
 				F31B5B451ADE1A7D00C3C332 /* UIView+RJDConvenience.m in Sources */,
 				F31B5B0F1ADE180400C3C332 /* AppDelegate.m in Sources */,
 				F31B5B351ADE194500C3C332 /* RYSTAffirmation.m in Sources */,
+				F31B5B661ADE2ECC00C3C332 /* RYSTVideoViewController.m in Sources */,
 				F31B5B4E1ADE1F8000C3C332 /* RYSTEnvironment.m in Sources */,
 				F31B5B511ADE1FD400C3C332 /* RYSTAPIEndpointRequest.m in Sources */,
 				F31B5B0C1ADE180400C3C332 /* main.m in Sources */,

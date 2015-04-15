@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+@class RYSTVideoViewController;
 
 @interface RYSTIntroViewController : UIViewController
+
+@property (nonatomic, strong) RYSTVideoViewController *presenter;
 
 @end

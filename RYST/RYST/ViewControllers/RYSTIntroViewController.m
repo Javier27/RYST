@@ -7,6 +7,7 @@
 //
 
 #import "RYSTIntroViewController.h"
+#import "RYSTVideoViewController.h"
 #import "UIView+RJDConvenience.h"
 
 static const NSInteger kNumberOfOnboardingScreens = 5;
@@ -132,9 +133,7 @@ static const CGFloat kOverlapForRotation = 60.0f;
 
 - (void)begin
 {
-  // this is a placeholder, eventually this will need to be a child vc
-  // and we will delegate the action to the parent
-  [self dismissViewControllerAnimated:YES completion:nil];
+  [self.presenter dismissChild:self];
 }
 
 @end
