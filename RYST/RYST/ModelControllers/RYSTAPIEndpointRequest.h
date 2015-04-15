@@ -7,7 +7,25 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "RYSTAPIEndpoint.h"
+
+@class RKObjectRequestOperation, RYSTAPIClient;
+
+typedef void (^RYSTMappingResultDelivery)(RKMappingResult *result, NSError *error);
+typedef void (^RYSTAPIEndpointRequestExpiryHandler)(void);
 
 @interface RYSTAPIEndpointRequest : NSObject
+
+@property (nonatomic, weak) RYSTAPIClient *apiClient;
+@property (nonatomic, readonly, copy) RYSTMappingResultDelivery completion;
+@property (nonatomic, strong, readonly) RYSTAPIEndpoint *endpoint;
+
++ (RYSTAPIEndpointRequest *)requestWithEndpoint:(RYSTAPIEndpointName)endpointName
+                                     pathSuffix:(NSString *)suffixOrNil
+                                         params:(NSDictionary *)paramsOrNil
+                                         object:(id)object
+                                     completion:(RYSTMappingResultDelivery)deliveryOrNil;
+
+- (RKObjectRequestOperation *)operation;
 
 @end

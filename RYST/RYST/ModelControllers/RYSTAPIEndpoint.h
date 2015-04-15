@@ -7,7 +7,22 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <RestKit/RestKit.h>
+
+typedef enum : NSInteger {
+  RYSTAPIEndpointNameSignIn,
+  RYSTAPIEndpointNameGetAffirmations,
+  RYSTAPIEndpointNameAddVideo,
+  RYSTAPIEndpointNameGetVideos,
+  RYSTAPIEndpointNameUploadVideos
+} RYSTAPIEndpointName;
 
 @interface RYSTAPIEndpoint : NSObject
+
+@property (nonatomic, assign) RKRequestMethod method;
+@property (nonatomic, copy) NSString *path;
+@property (nonatomic, copy) NSArray  *responseDescriptors;
+
++ (instancetype)endpointWithName:(RYSTAPIEndpointName)name;
 
 @end
