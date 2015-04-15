@@ -37,6 +37,31 @@
   return self.authToken.length > 0;
 }
 
+- (void)signInWithEmail:(NSString *)name completionOrNil:(RYSTTokenDelivery)completionOrNil
+{
+  [self.apiClient signInWithName:name completion:^(RYSTToken *result, NSError *error) {
+    if (result) {
+      self.authToken = result.token;
+      RYSTUserDefaultsSetAuthToken(result.token);
+      RYSTUserDefaultsSetHasEverSignedIn(YES);
+    }
+
+    if (completionOrNil) completionOrNil(result, error);
+  }];
+}
+
+- (void)signOut
+{
+  RYSTUserDefaultsSetAuthToken(@"");
+}
+
+- (void)resetApp
+{
+  RYSTUserDefaultsSetAuthToken(@"");
+  RYSTUserDefaultsSetHasEverSignedIn(YES);
+}
+
+
 - (RYSTAPIClient *)apiClient
 {
   if (!_apiClient) {

@@ -27,6 +27,7 @@
 		F31B5B541ADE1FE200C3C332 /* RYSTAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B531ADE1FE200C3C332 /* RYSTAPIClient.m */; };
 		F31B5B571ADE1FF200C3C332 /* RYSTSessionController.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B561ADE1FF200C3C332 /* RYSTSessionController.m */; };
 		F31B5B5A1ADE21A000C3C332 /* RYSTAPIError.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B591ADE21A000C3C332 /* RYSTAPIError.m */; };
+		F31B5B5D1ADE270A00C3C332 /* RYSTBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B5C1ADE270A00C3C332 /* RYSTBaseViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +82,8 @@
 		F31B5B561ADE1FF200C3C332 /* RYSTSessionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTSessionController.m; sourceTree = "<group>"; };
 		F31B5B581ADE21A000C3C332 /* RYSTAPIError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTAPIError.h; sourceTree = "<group>"; };
 		F31B5B591ADE21A000C3C332 /* RYSTAPIError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTAPIError.m; sourceTree = "<group>"; };
+		F31B5B5B1ADE270A00C3C332 /* RYSTBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTBaseViewController.h; sourceTree = "<group>"; };
+		F31B5B5C1ADE270A00C3C332 /* RYSTBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTBaseViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -210,6 +213,8 @@
 		F31B5B311ADE190100C3C332 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				F31B5B5B1ADE270A00C3C332 /* RYSTBaseViewController.h */,
+				F31B5B5C1ADE270A00C3C332 /* RYSTBaseViewController.m */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -395,6 +400,7 @@
 				F31B5B511ADE1FD400C3C332 /* RYSTAPIEndpointRequest.m in Sources */,
 				F31B5B0C1ADE180400C3C332 /* main.m in Sources */,
 				F31B5B3B1ADE196400C3C332 /* RYSTUploadResponse.m in Sources */,
+				F31B5B5D1ADE270A00C3C332 /* RYSTBaseViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

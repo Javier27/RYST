@@ -16,4 +16,7 @@
 + (instancetype)sessionController;
 
 - (BOOL)isSignedIn;
+- (void)signInWithEmail:(NSString *)name completionOrNil:(RYSTTokenDelivery)completionOrNil;
+- (void)signOut;
+- (void)resetApp; // this is for demonstrative purposes
 @end
