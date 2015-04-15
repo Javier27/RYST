@@ -12,7 +12,7 @@
 
 static const NSInteger kNumberOfOnboardingScreens = 5;
 // this represents our decision of when the user should rotate between screens
-static const CGFloat kOverlapForRotation = 60.0f;
+static const CGFloat kOverlapForRotation = 100.0f;
 
 @interface RYSTIntroViewController () <UIScrollViewDelegate>
 

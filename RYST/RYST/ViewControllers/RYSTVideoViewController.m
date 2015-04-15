@@ -34,7 +34,7 @@
 - (void)dismissChild:(UIViewController *)child
 {
   if (child == self.childViewController) {
-    [UIView animateWithDuration:0.5f
+    [UIView animateWithDuration:0.3f
                      animations:^{
                        self.childViewController.view.layer.transform = CATransform3DScale(CATransform3DIdentity,
                                                                                           0.01f,
