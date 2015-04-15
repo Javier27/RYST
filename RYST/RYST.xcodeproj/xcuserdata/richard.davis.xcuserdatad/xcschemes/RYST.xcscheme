@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F3BC0ACB1ADE15D7002214DD"
+               BlueprintIdentifier = "F31B5B051ADE180400C3C332"
                BuildableName = "RYST.app"
                BlueprintName = "RYST"
                ReferencedContainer = "container:RYST.xcodeproj">
@@ -28,7 +28,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F3BC0AE41ADE15D7002214DD"
+               BlueprintIdentifier = "F31B5B1E1ADE180400C3C332"
                BuildableName = "RYSTTests.xctest"
                BlueprintName = "RYSTTests"
                ReferencedContainer = "container:RYST.xcodeproj">
@@ -46,7 +46,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F3BC0AE41ADE15D7002214DD"
+               BlueprintIdentifier = "F31B5B1E1ADE180400C3C332"
                BuildableName = "RYSTTests.xctest"
                BlueprintName = "RYSTTests"
                ReferencedContainer = "container:RYST.xcodeproj">
@@ -56,7 +56,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "F3BC0ACB1ADE15D7002214DD"
+            BlueprintIdentifier = "F31B5B051ADE180400C3C332"
             BuildableName = "RYST.app"
             BlueprintName = "RYST"
             ReferencedContainer = "container:RYST.xcodeproj">
@@ -75,7 +75,7 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "F3BC0ACB1ADE15D7002214DD"
+            BlueprintIdentifier = "F31B5B051ADE180400C3C332"
             BuildableName = "RYST.app"
             BlueprintName = "RYST"
             ReferencedContainer = "container:RYST.xcodeproj">
@@ -93,7 +93,7 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "F3BC0ACB1ADE15D7002214DD"
+            BlueprintIdentifier = "F31B5B051ADE180400C3C332"
             BuildableName = "RYST.app"
             BlueprintName = "RYST"
             ReferencedContainer = "container:RYST.xcodeproj">
