@@ -19,6 +19,10 @@
 		F31B5B381ADE195800C3C332 /* RYSTToken.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B371ADE195800C3C332 /* RYSTToken.m */; };
 		F31B5B3B1ADE196400C3C332 /* RYSTUploadResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B3A1ADE196400C3C332 /* RYSTUploadResponse.m */; };
 		F31B5B3E1ADE196E00C3C332 /* RYSTVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B3D1ADE196E00C3C332 /* RYSTVideo.m */; };
+		F31B5B451ADE1A7D00C3C332 /* UIView+RJDConvenience.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B441ADE1A7D00C3C332 /* UIView+RJDConvenience.m */; };
+		F31B5B481ADE1F3A00C3C332 /* RYSTAPIObjectManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B471ADE1F3A00C3C332 /* RYSTAPIObjectManager.m */; };
+		F31B5B4B1ADE1F6F00C3C332 /* RYSTAPIEndpoint.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B4A1ADE1F6F00C3C332 /* RYSTAPIEndpoint.m */; };
+		F31B5B4E1ADE1F8000C3C332 /* RYSTEnvironment.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B4D1ADE1F8000C3C332 /* RYSTEnvironment.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +61,14 @@
 		F31B5B3C1ADE196E00C3C332 /* RYSTVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTVideo.h; sourceTree = "<group>"; };
 		F31B5B3D1ADE196E00C3C332 /* RYSTVideo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTVideo.m; sourceTree = "<group>"; };
 		F31B5B3F1ADE19E700C3C332 /* RYSTAPIResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTAPIResult.h; sourceTree = "<group>"; };
+		F31B5B431ADE1A7D00C3C332 /* UIView+RJDConvenience.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+RJDConvenience.h"; sourceTree = "<group>"; };
+		F31B5B441ADE1A7D00C3C332 /* UIView+RJDConvenience.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+RJDConvenience.m"; sourceTree = "<group>"; };
+		F31B5B461ADE1F3A00C3C332 /* RYSTAPIObjectManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTAPIObjectManager.h; sourceTree = "<group>"; };
+		F31B5B471ADE1F3A00C3C332 /* RYSTAPIObjectManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTAPIObjectManager.m; sourceTree = "<group>"; };
+		F31B5B491ADE1F6F00C3C332 /* RYSTAPIEndpoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTAPIEndpoint.h; sourceTree = "<group>"; };
+		F31B5B4A1ADE1F6F00C3C332 /* RYSTAPIEndpoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTAPIEndpoint.m; sourceTree = "<group>"; };
+		F31B5B4C1ADE1F8000C3C332 /* RYSTEnvironment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTEnvironment.h; sourceTree = "<group>"; };
+		F31B5B4D1ADE1F8000C3C332 /* RYSTEnvironment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTEnvironment.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +123,7 @@
 			isa = PBXGroup;
 			children = (
 				F31B5B321ADE190C00C3C332 /* Application */,
+				F31B5B421ADE1A5C00C3C332 /* Categories */,
 				F31B5B301ADE18E800C3C332 /* ModelControllers */,
 				F31B5B2F1ADE18DD00C3C332 /* Models */,
 				F31B5B311ADE190100C3C332 /* ViewControllers */,
@@ -166,6 +179,10 @@
 		F31B5B301ADE18E800C3C332 /* ModelControllers */ = {
 			isa = PBXGroup;
 			children = (
+				F31B5B461ADE1F3A00C3C332 /* RYSTAPIObjectManager.h */,
+				F31B5B471ADE1F3A00C3C332 /* RYSTAPIObjectManager.m */,
+				F31B5B491ADE1F6F00C3C332 /* RYSTAPIEndpoint.h */,
+				F31B5B4A1ADE1F6F00C3C332 /* RYSTAPIEndpoint.m */,
 			);
 			path = ModelControllers;
 			sourceTree = "<group>";
@@ -185,8 +202,19 @@
 				F31B5B131ADE180400C3C332 /* Main.storyboard */,
 				F31B5B161ADE180400C3C332 /* Images.xcassets */,
 				F31B5B181ADE180400C3C332 /* LaunchScreen.xib */,
+				F31B5B4C1ADE1F8000C3C332 /* RYSTEnvironment.h */,
+				F31B5B4D1ADE1F8000C3C332 /* RYSTEnvironment.m */,
 			);
 			path = Application;
+			sourceTree = "<group>";
+		};
+		F31B5B421ADE1A5C00C3C332 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				F31B5B431ADE1A7D00C3C332 /* UIView+RJDConvenience.h */,
+				F31B5B441ADE1A7D00C3C332 /* UIView+RJDConvenience.m */,
+			);
+			path = Categories;
 			sourceTree = "<group>";
 		};
 		F90EB6B053C93233E73D4937 /* Frameworks */ = {
@@ -333,10 +361,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				F31B5B381ADE195800C3C332 /* RYSTToken.m in Sources */,
+				F31B5B4B1ADE1F6F00C3C332 /* RYSTAPIEndpoint.m in Sources */,
 				F31B5B3E1ADE196E00C3C332 /* RYSTVideo.m in Sources */,
 				F31B5B121ADE180400C3C332 /* ViewController.m in Sources */,
+				F31B5B481ADE1F3A00C3C332 /* RYSTAPIObjectManager.m in Sources */,
+				F31B5B451ADE1A7D00C3C332 /* UIView+RJDConvenience.m in Sources */,
 				F31B5B0F1ADE180400C3C332 /* AppDelegate.m in Sources */,
 				F31B5B351ADE194500C3C332 /* RYSTAffirmation.m in Sources */,
+				F31B5B4E1ADE1F8000C3C332 /* RYSTEnvironment.m in Sources */,
 				F31B5B0C1ADE180400C3C332 /* main.m in Sources */,
 				F31B5B3B1ADE196400C3C332 /* RYSTUploadResponse.m in Sources */,
 			);
