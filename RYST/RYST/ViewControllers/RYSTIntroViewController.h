@@ -10,5 +10,4 @@
 
 @interface RYSTIntroViewController : UIViewController
 
-
 @end

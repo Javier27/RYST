@@ -10,7 +10,4 @@
 #import "RYSTBaseViewController.h"
 
 @interface RYSTSignInViewController : RYSTBaseViewController
-
-- (void)moveToBody;
-
 @end
