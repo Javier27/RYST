@@ -15,6 +15,10 @@
 		F31B5B171ADE180400C3C332 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F31B5B161ADE180400C3C332 /* Images.xcassets */; };
 		F31B5B1A1ADE180400C3C332 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = F31B5B181ADE180400C3C332 /* LaunchScreen.xib */; };
 		F31B5B261ADE180400C3C332 /* RYSTTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B251ADE180400C3C332 /* RYSTTests.m */; };
+		F31B5B351ADE194500C3C332 /* RYSTAffirmation.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B341ADE194500C3C332 /* RYSTAffirmation.m */; };
+		F31B5B381ADE195800C3C332 /* RYSTToken.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B371ADE195800C3C332 /* RYSTToken.m */; };
+		F31B5B3B1ADE196400C3C332 /* RYSTUploadResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B3A1ADE196400C3C332 /* RYSTUploadResponse.m */; };
+		F31B5B3E1ADE196E00C3C332 /* RYSTVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B3D1ADE196E00C3C332 /* RYSTVideo.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,16 +38,25 @@
 		F31B5B061ADE180400C3C332 /* RYST.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RYST.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F31B5B0A1ADE180400C3C332 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F31B5B0B1ADE180400C3C332 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		F31B5B0D1ADE180400C3C332 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		F31B5B0E1ADE180400C3C332 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		F31B5B0D1ADE180400C3C332 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ../AppDelegate.h; sourceTree = "<group>"; };
+		F31B5B0E1ADE180400C3C332 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = ../AppDelegate.m; sourceTree = "<group>"; };
 		F31B5B101ADE180400C3C332 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		F31B5B111ADE180400C3C332 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		F31B5B141ADE180400C3C332 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		F31B5B161ADE180400C3C332 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		F31B5B161ADE180400C3C332 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = ../Images.xcassets; sourceTree = "<group>"; };
 		F31B5B191ADE180400C3C332 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		F31B5B1F1ADE180400C3C332 /* RYSTTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RYSTTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F31B5B241ADE180400C3C332 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F31B5B251ADE180400C3C332 /* RYSTTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RYSTTests.m; sourceTree = "<group>"; };
+		F31B5B331ADE194500C3C332 /* RYSTAffirmation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTAffirmation.h; sourceTree = "<group>"; };
+		F31B5B341ADE194500C3C332 /* RYSTAffirmation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTAffirmation.m; sourceTree = "<group>"; };
+		F31B5B361ADE195800C3C332 /* RYSTToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTToken.h; sourceTree = "<group>"; };
+		F31B5B371ADE195800C3C332 /* RYSTToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTToken.m; sourceTree = "<group>"; };
+		F31B5B391ADE196400C3C332 /* RYSTUploadResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTUploadResponse.h; sourceTree = "<group>"; };
+		F31B5B3A1ADE196400C3C332 /* RYSTUploadResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTUploadResponse.m; sourceTree = "<group>"; };
+		F31B5B3C1ADE196E00C3C332 /* RYSTVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTVideo.h; sourceTree = "<group>"; };
+		F31B5B3D1ADE196E00C3C332 /* RYSTVideo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTVideo.m; sourceTree = "<group>"; };
+		F31B5B3F1ADE19E700C3C332 /* RYSTAPIResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTAPIResult.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,13 +110,12 @@
 		F31B5B081ADE180400C3C332 /* RYST */ = {
 			isa = PBXGroup;
 			children = (
-				F31B5B0D1ADE180400C3C332 /* AppDelegate.h */,
-				F31B5B0E1ADE180400C3C332 /* AppDelegate.m */,
+				F31B5B321ADE190C00C3C332 /* Application */,
+				F31B5B301ADE18E800C3C332 /* ModelControllers */,
+				F31B5B2F1ADE18DD00C3C332 /* Models */,
+				F31B5B311ADE190100C3C332 /* ViewControllers */,
 				F31B5B101ADE180400C3C332 /* ViewController.h */,
 				F31B5B111ADE180400C3C332 /* ViewController.m */,
-				F31B5B131ADE180400C3C332 /* Main.storyboard */,
-				F31B5B161ADE180400C3C332 /* Images.xcassets */,
-				F31B5B181ADE180400C3C332 /* LaunchScreen.xib */,
 				F31B5B091ADE180400C3C332 /* Supporting Files */,
 			);
 			path = RYST;
@@ -133,6 +145,48 @@
 				F31B5B241ADE180400C3C332 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F31B5B2F1ADE18DD00C3C332 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				F31B5B331ADE194500C3C332 /* RYSTAffirmation.h */,
+				F31B5B341ADE194500C3C332 /* RYSTAffirmation.m */,
+				F31B5B3F1ADE19E700C3C332 /* RYSTAPIResult.h */,
+				F31B5B361ADE195800C3C332 /* RYSTToken.h */,
+				F31B5B371ADE195800C3C332 /* RYSTToken.m */,
+				F31B5B391ADE196400C3C332 /* RYSTUploadResponse.h */,
+				F31B5B3A1ADE196400C3C332 /* RYSTUploadResponse.m */,
+				F31B5B3C1ADE196E00C3C332 /* RYSTVideo.h */,
+				F31B5B3D1ADE196E00C3C332 /* RYSTVideo.m */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		F31B5B301ADE18E800C3C332 /* ModelControllers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ModelControllers;
+			sourceTree = "<group>";
+		};
+		F31B5B311ADE190100C3C332 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		F31B5B321ADE190C00C3C332 /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				F31B5B0D1ADE180400C3C332 /* AppDelegate.h */,
+				F31B5B0E1ADE180400C3C332 /* AppDelegate.m */,
+				F31B5B131ADE180400C3C332 /* Main.storyboard */,
+				F31B5B161ADE180400C3C332 /* Images.xcassets */,
+				F31B5B181ADE180400C3C332 /* LaunchScreen.xib */,
+			);
+			path = Application;
 			sourceTree = "<group>";
 		};
 		F90EB6B053C93233E73D4937 /* Frameworks */ = {
@@ -278,9 +332,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F31B5B381ADE195800C3C332 /* RYSTToken.m in Sources */,
+				F31B5B3E1ADE196E00C3C332 /* RYSTVideo.m in Sources */,
 				F31B5B121ADE180400C3C332 /* ViewController.m in Sources */,
 				F31B5B0F1ADE180400C3C332 /* AppDelegate.m in Sources */,
+				F31B5B351ADE194500C3C332 /* RYSTAffirmation.m in Sources */,
 				F31B5B0C1ADE180400C3C332 /* main.m in Sources */,
+				F31B5B3B1ADE196400C3C332 /* RYSTUploadResponse.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -309,6 +367,7 @@
 				F31B5B141ADE180400C3C332 /* Base */,
 			);
 			name = Main.storyboard;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		F31B5B181ADE180400C3C332 /* LaunchScreen.xib */ = {
@@ -317,6 +376,7 @@
 				F31B5B191ADE180400C3C332 /* Base */,
 			);
 			name = LaunchScreen.xib;
+			path = ..;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
