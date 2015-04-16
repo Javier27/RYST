@@ -6,11 +6,12 @@
 //  Copyright (c) 2015 Vissix. All rights reserved.
 //
 
+#import "RYSTAffirmationLabel.h"
 #import "RYSTIntroViewController.h"
 #import "RYSTVideoViewController.h"
 #import "UIView+RJDConvenience.h"
 
-static const NSInteger kNumberOfOnboardingScreens = 5;
+static const NSInteger kNumberOfOnboardingScreens = 3;
 // this represents our decision of when the user should rotate between screens
 static const CGFloat kOverlapForRotation = 100.0f;
 
@@ -42,7 +43,7 @@ static const CGFloat kOverlapForRotation = 100.0f;
 
   // create the screens in reverse order
   UIView *screen1 = [[UIView alloc] initWithFrame:screenFrame];
-  screen1.backgroundColor = [UIColor colorWithRed:63.0f/255.0f green:225.0f/255.0f blue:181.0f/255.0f alpha:1.0f];
+  screen1.backgroundColor = [UIColor colorWithRed:(235.0/255.0) green:(46.0/255.0) blue:(81.0/255.0) alpha:1.0];
   [_scrollView addSubview:screen1];
   screenFrame.origin.y += CGRectGetHeight(self.view.bounds);
 
@@ -58,25 +59,67 @@ static const CGFloat kOverlapForRotation = 100.0f;
   [overlayButton addTarget:self action:@selector(begin) forControlEvents:UIControlEventTouchUpInside];
   [screen1 addSubview:overlayButton];
 
-  UIView *screen2 = [[UIView alloc] initWithFrame:screenFrame];
-  screen2.backgroundColor = [UIColor colorWithRed:174.0f/255.0f green:0.0f/255.0f blue:220.0f/255.0f alpha:1.0f];
-  [_scrollView addSubview:screen2];
-  screenFrame.origin.y += CGRectGetHeight(self.view.bounds);
-
-  UIView *screen3 = [[UIView alloc] initWithFrame:screenFrame];
-  screen3.backgroundColor = [UIColor greenColor];
-  [_scrollView addSubview:screen3];
-  screenFrame.origin.y += CGRectGetHeight(self.view.bounds);
-
   UIView *screen4 = [[UIView alloc] initWithFrame:screenFrame];
-  screen4.backgroundColor = [UIColor cyanColor];
+  screen4.backgroundColor = [UIColor colorWithRed:63.0f/255.0f green:225.0f/255.0f blue:181.0f/255.0f alpha:1.0f];
   [_scrollView addSubview:screen4];
   screenFrame.origin.y += CGRectGetHeight(self.view.bounds);
 
+  UILabel *explanationLabel = [[UILabel alloc] init];
+  explanationLabel.translatesAutoresizingMaskIntoConstraints = NO;
+  explanationLabel.textColor = [UIColor whiteColor];
+  explanationLabel.font = [UIFont fontWithName:@"Avenir-Roman" size:22.0f];
+  explanationLabel.text = NSLocalizedString(@"Record yourself\nsaying a positive\naffirmation you see.", nil);
+  explanationLabel.numberOfLines = 0;
+  explanationLabel.textAlignment = NSTextAlignmentCenter;
+
+  UILabel *explanationLabel2 = [[UILabel alloc] init];
+  explanationLabel2.translatesAutoresizingMaskIntoConstraints = NO;
+  explanationLabel2.textColor = [UIColor whiteColor];
+  explanationLabel2.font = [UIFont fontWithName:@"Avenir-Roman" size:22.0f];
+  explanationLabel2.text = NSLocalizedString(@"Then, share it.", nil);
+  explanationLabel2.numberOfLines = 0;
+  explanationLabel2.textAlignment = NSTextAlignmentCenter;
+
+  UIImageView *upArrow4 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"up-arrow"]];
+  upArrow4.translatesAutoresizingMaskIntoConstraints = NO;
+
+  [screen4 addSubview:explanationLabel];
+  [screen4 addSubview:explanationLabel2];
+  [screen4 addSubview:upArrow4];
+  [screen4 centerChildren:@[explanationLabel2]];
+  [screen4 centerChildrenHorizontally:@[upArrow4, explanationLabel]];
+
+  [screen4 convenientConstraintsWithVisualFormats:@[ @"V:[upArrow]-50-|",
+                                                     @"V:[explanationLabel]-25-[explanationLabel2]" ]
+                                          options:0
+                                          metrics:nil
+                                         children:@{ @"upArrow" : upArrow4,
+                                                     @"explanationLabel" : explanationLabel,
+                                                     @"explanationLabel2" : explanationLabel2 }];
+
   UIView *screen5 = [[UIView alloc] initWithFrame:screenFrame];
-  screen5.backgroundColor = [UIColor yellowColor];
+  screen5.backgroundColor = [UIColor colorWithRed:174.0f/255.0f green:0.0f/255.0f blue:220.0f/255.0f alpha:1.0f];
   [_scrollView addSubview:screen5];
   screenFrame.origin.y += CGRectGetHeight(self.view.bounds);
+
+  RYSTAffirmationLabel *positiveLabel = [[RYSTAffirmationLabel alloc] init];
+  positiveLabel.translatesAutoresizingMaskIntoConstraints = NO;
+  positiveLabel.text = NSLocalizedString(@"STAY POSITIVE!", nil);
+  positiveLabel.textAlignment = NSTextAlignmentCenter;
+  [screen5 addSubview:positiveLabel];
+  [screen5 centerChildren:@[positiveLabel]];
+
+  UIImageView *upArrow5 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"up-arrow"]];
+  upArrow5.translatesAutoresizingMaskIntoConstraints = NO;
+  [screen5 addSubview:upArrow5];
+  [screen5 centerChildrenHorizontally:@[upArrow5]];
+  [screen5 convenientConstraintsWithVisualFormats:@[ @"V:[upArrow]-50-|",
+                                                     @"V:[positiveLabel(70)]",
+                                                     @"H:[positiveLabel(240)]" ]
+                                          options:0
+                                          metrics:nil
+                                         children:@{ @"upArrow" : upArrow5,
+                                                     @"positiveLabel" : positiveLabel }];
 
   _scrollView.contentOffset = CGPointMake(0, (kNumberOfOnboardingScreens - 1) * CGRectGetHeight(self.view.bounds));
 }
