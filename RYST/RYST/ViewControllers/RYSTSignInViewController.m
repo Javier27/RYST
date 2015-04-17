@@ -83,7 +83,7 @@
 
   }
 
-  RYSTVideoViewController *mainVC = [[RYSTVideoViewController alloc] init];
+  RYSTVideoViewController *mainVC = [[RYSTVideoViewController alloc] initShouldDisplayIntro:YES];
   [self presentViewController:mainVC animated:YES completion:nil];
 
   //  if (self.usernameTextField.text.length > 0) {

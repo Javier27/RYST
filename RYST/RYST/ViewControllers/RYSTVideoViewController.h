@@ -14,4 +14,6 @@
 // pattern but leaving for now for simplicity, gets the job done
 - (void)dismissChild:(UIViewController *)child;
 
+- (instancetype)initShouldDisplayIntro:(BOOL)shouldDisplayIntro;
+
 @end
