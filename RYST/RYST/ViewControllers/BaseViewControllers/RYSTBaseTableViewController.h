@@ -1,15 +1,15 @@
 //
-//  RYSTBaseViewController.h
+//  RYSTBaseTableViewController.h
 //  RYST
 //
-//  Created by Richie Davis on 4/15/15.
+//  Created by Richie Davis on 4/16/15.
 //  Copyright (c) 2015 Vissix. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 #import "RYSTAPIClient.h"
 
-@interface RYSTBaseViewController : UIViewController
+@interface RYSTBaseTableViewController : UITableViewController
 
 // intended for class-based requests, app level requests should be on a shared
 // api client, currently this is not required by this application

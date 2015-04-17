@@ -13,7 +13,7 @@
 #import "RYSTSessionController.h"
 #import <RestKit/RestKit.h>
 
-static NSString *const kHeaderRYSTToken = @"X-RYST-Token";
+NSString *const kHeaderRYSTToken = @"X-RYST-Token";
 
 @interface RYSTAPIEndpointRequest ()
 

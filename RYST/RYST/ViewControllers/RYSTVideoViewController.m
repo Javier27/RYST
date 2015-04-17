@@ -10,8 +10,13 @@
 #import "RYSTIntroViewController.h"
 #import "RYSTCameraView.h"
 #import "RYSTRecordButton.h"
+#import "RYSTPickAffirmationViewController.h"
+#import "RYSTVideoGalleryViewController.h"
+#import "RYSTAffirmation.h"
+#import "RYSTUploadResponse.h"
 
 #import "UIView+RJDConvenience.h"
+#import "UILabel+FSHighlightAnimationAdditions.h"
 
 #import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
@@ -23,6 +28,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 @property (nonatomic, strong) RYSTIntroViewController *childViewController;
 @property (nonatomic) BOOL shouldDisplayIntro;
+@property (nonatomic, strong) NSURL *videoURL;
 
 @property (nonatomic, strong) RYSTCameraView *previewView;
 @property (nonatomic, strong) RYSTRecordButton *recordButton;
@@ -30,8 +36,9 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 @property (nonatomic, strong) UIButton *pickAffirmationButton;
 @property (nonatomic, strong) UIButton *viewAffirmationsButton;
 @property (nonatomic, strong) UILabel *affirmationLabel;
+@property (nonatomic, strong) UILabel *submitLabel;
 
-@property (nonatomic, strong) NSString *affirmationString;
+@property (nonatomic, strong) RYSTAffirmation *affirmation;
 
 // recording session management
 @property (nonatomic) dispatch_queue_t sessionQueue;
@@ -89,22 +96,20 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
   _pickAffirmationButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.view.bounds) - 70, CGRectGetHeight(self.view.bounds) - 70, 50, 50)];
   [_pickAffirmationButton setBackgroundImage:[UIImage imageNamed:@"pointer-blue"] forState:UIControlStateNormal];
-  [_pickAffirmationButton addTarget:self action:@selector(changeCamera) forControlEvents:UIControlEventTouchUpInside];
+  [_pickAffirmationButton addTarget:self action:@selector(presentAffirmationList) forControlEvents:UIControlEventTouchUpInside];
   [self.view addSubview:_pickAffirmationButton];
 
   _viewAffirmationsButton = [[UIButton alloc] initWithFrame:CGRectMake(20, CGRectGetHeight(self.view.bounds) - 65, 45, 45)];
   [_viewAffirmationsButton setBackgroundImage:[UIImage imageNamed:@"movie-yellow"] forState:UIControlStateNormal];
-  [_viewAffirmationsButton addTarget:self action:@selector(changeCamera) forControlEvents:UIControlEventTouchUpInside];
+  [_viewAffirmationsButton addTarget:self action:@selector(presentVideoGallery) forControlEvents:UIControlEventTouchUpInside];
   [self.view addSubview:_viewAffirmationsButton];
-
-  _affirmationString = NSLocalizedString(@"Pick an affirmation!", nil);
 
   _affirmationLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 20)];
   _affirmationLabel.backgroundColor = [UIColor colorWithRed:174.0f/255.0f green:0.0f/255.0f blue:220.0f/255.0f alpha:1.0f];
   _affirmationLabel.font = [UIFont fontWithName:@"Avenir-Roman" size:12.0f];
   _affirmationLabel.textColor = [UIColor whiteColor];
   _affirmationLabel.textAlignment = NSTextAlignmentCenter;
-  _affirmationLabel.text = self.affirmationString;
+  _affirmationLabel.text = NSLocalizedString(@"Pick an affirmation!", nil);
   _affirmationLabel.alpha = 0.5f;
   [self.view addSubview:_affirmationLabel];
   
@@ -208,24 +213,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
   });
 }
 
-- (void)dismissChild:(UIViewController *)child
-{
-  if (child == self.childViewController) {
-    [UIView animateWithDuration:0.3f
-                     animations:^{
-                       self.childViewController.view.layer.transform = CATransform3DScale(CATransform3DIdentity,
-                                                                                          0.01f,
-                                                                                          0.01f,
-                                                                                          1.0f);
-                     } completion:^(BOOL finished) {
-                       [self.childViewController willMoveToParentViewController:nil];
-                       [self.childViewController.view removeFromSuperview];
-                       [self.childViewController removeFromParentViewController];
-                       [self showCameraView];
-                     }];
-  } // abort if not
-}
-
 - (BOOL)prefersStatusBarHidden
 {
   return YES;
@@ -271,31 +258,35 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 - (void)toggleMovieRecording
 {
-  [self.recordButton toggleRecording];
+  if (self.affirmation) {
+    [self.recordButton toggleRecording];
 
-  [self.recordButton setEnabled:NO];
+    [self.recordButton setEnabled:NO];
 
-  dispatch_async([self sessionQueue], ^{
-    if (![self.movieFileOutput isRecording]) {
-      [self setLockInterfaceRotation:YES];
+    dispatch_async([self sessionQueue], ^{
+      if (![self.movieFileOutput isRecording]) {
+        [self setLockInterfaceRotation:YES];
 
-      if ([[UIDevice currentDevice] isMultitaskingSupported]) {
-        [self setBackgroundRecordingID:[[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:nil]];
+        if ([[UIDevice currentDevice] isMultitaskingSupported]) {
+          [self setBackgroundRecordingID:[[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:nil]];
+        }
+
+        // Update the orientation on the movie file output video connection before starting recording.
+        [[self.movieFileOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:[[(AVCaptureVideoPreviewLayer *)self.previewView.layer connection] videoOrientation]];
+
+        // Turning OFF flash for video recording
+        [RYSTVideoViewController setFlashMode:AVCaptureFlashModeOff forDevice:[[self videoDeviceInput] device]];
+
+        // Start recording to a temporary file.
+        NSString *outputFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[@"movie" stringByAppendingPathExtension:@"mov"]];
+        [self.movieFileOutput startRecordingToOutputFileURL:[NSURL fileURLWithPath:outputFilePath] recordingDelegate:self];
+      } else {
+        [self.movieFileOutput stopRecording];
       }
-
-      // Update the orientation on the movie file output video connection before starting recording.
-      [[self.movieFileOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:[[(AVCaptureVideoPreviewLayer *)self.previewView.layer connection] videoOrientation]];
-
-      // Turning OFF flash for video recording
-      [RYSTVideoViewController setFlashMode:AVCaptureFlashModeOff forDevice:[[self videoDeviceInput] device]];
-
-      // Start recording to a temporary file.
-      NSString *outputFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[@"movie" stringByAppendingPathExtension:@"mov"]];
-      [self.movieFileOutput startRecordingToOutputFileURL:[NSURL fileURLWithPath:outputFilePath] recordingDelegate:self];
-    } else {
-      [self.movieFileOutput stopRecording];
-    }
-  });
+    });
+  } else {
+    // display an error message, need to select an affirmation
+  }
 }
 
 - (void)changeCamera
@@ -361,14 +352,12 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
   [self setLockInterfaceRotation:NO];
 
-  UIBackgroundTaskIdentifier backgroundRecordingID = [self backgroundRecordingID];
-  [self setBackgroundRecordingID:UIBackgroundTaskInvalid];
-
-  [[[ALAssetsLibrary alloc] init] writeVideoAtPathToSavedPhotosAlbum:outputFileURL completionBlock:^(NSURL *assetURL, NSError *error) {
-    if (error) NSLog(@"%@", error);
-    [[NSFileManager defaultManager] removeItemAtURL:outputFileURL error:nil];
-    if (backgroundRecordingID != UIBackgroundTaskInvalid) [[UIApplication sharedApplication] endBackgroundTask:backgroundRecordingID];
-  }];
+  [self uploadVideoWithUrl:outputFileURL];
+//  [[[ALAssetsLibrary alloc] init] writeVideoAtPathToSavedPhotosAlbum:outputFileURL completionBlock:^(NSURL *assetURL, NSError *error) {
+//    if (error) NSLog(@"%@", error);
+//    [[NSFileManager defaultManager] removeItemAtURL:outputFileURL error:nil];
+//    if (backgroundRecordingID != UIBackgroundTaskInvalid) [[UIApplication sharedApplication] endBackgroundTask:backgroundRecordingID];
+//  }];
 }
 
 #pragma mark Device Configuration
@@ -439,6 +428,98 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         [self setDeviceAuthorized:NO];
       });
     }}];
+}
+
+#pragma mark presented and child return calls, special presenters
+
+- (void)presentAffirmationList
+{
+  RYSTPickAffirmationViewController *vc = [[RYSTPickAffirmationViewController alloc] initWithStyle:UITableViewStylePlain parent:self];
+  [self presentViewController:vc animated:YES completion:nil];
+}
+
+- (void)presentVideoGallery
+{
+  RYSTVideoGalleryViewController *vc = [[RYSTVideoGalleryViewController alloc] init];
+  [self presentViewController:vc animated:YES completion:nil];
+}
+
+- (void)dismissChild:(UIViewController *)child
+{
+  if (child == self.childViewController) {
+    [UIView animateWithDuration:0.3f
+                     animations:^{
+                       self.childViewController.view.layer.transform = CATransform3DScale(CATransform3DIdentity,
+                                                                                          0.01f,
+                                                                                          0.01f,
+                                                                                          1.0f);
+                     } completion:^(BOOL finished) {
+                       [self.childViewController willMoveToParentViewController:nil];
+                       [self.childViewController.view removeFromSuperview];
+                       [self.childViewController removeFromParentViewController];
+                       [self showCameraView];
+                     }];
+  } // abort if not
+}
+
+- (void)dismissAffirmationTable:(RYSTAffirmation *)affirmation
+{
+  if (affirmation) {
+    self.affirmation = affirmation;
+    self.affirmationLabel.text = affirmation.text;
+  }
+  [self dismissViewControllerAnimated:YES completion:^{
+    [self showCameraView];
+  }];
+}
+
+- (void)dismissGallery
+{
+  [self dismissViewControllerAnimated:YES completion:^{
+    [self showCameraView];
+  }];
+}
+
+# pragma mark video upload
+
+- (void)uploadVideoWithUrl:(NSURL *)url
+{
+  _videoURL = url;
+
+  UILabel *submitLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.view.bounds) - 80, CGRectGetWidth(self.view.bounds), 80)];
+  submitLabel.backgroundColor = [UIColor colorWithRed:174.0f/255.0f green:0.0f/255.0f blue:220.0f/255.0f alpha:1.0f];
+  submitLabel.textColor = [UIColor whiteColor];
+  submitLabel.font = [UIFont fontWithName:@"Avenir-Roman" size:25.0f];
+  submitLabel.textAlignment = NSTextAlignmentCenter;
+  [submitLabel setTextWithChangeAnimation:NSLocalizedString(@"Swipe to Share >", nil)];
+  submitLabel.userInteractionEnabled = YES;
+
+  UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(sendVideo)];
+  swipe.direction = UISwipeGestureRecognizerDirectionRight;
+  swipe.numberOfTouchesRequired = 1;
+  [submitLabel addGestureRecognizer:swipe];
+
+  [self.view addSubview:submitLabel];
+  _submitLabel = submitLabel;
+}
+
+- (void)sendVideo
+{
+  [self.submitLabel removeFromSuperview];
+  __weak typeof(self) weakSelf = self;
+  [self.apiClient uploadVideo:[NSData dataWithContentsOfURL:self.videoURL] completion:^(RYSTUploadResponse *result, NSError *error) {
+    if (result) {
+      [weakSelf.apiClient addVideoWithURL:result.url affirmationId:result.affirmation.affirmationIdentifier completion:^(RYSTVideo *result, NSError *error) {
+        if (result) {
+          UIBackgroundTaskIdentifier backgroundRecordingID = [weakSelf backgroundRecordingID];
+          [weakSelf setBackgroundRecordingID:UIBackgroundTaskInvalid];
+          [[NSFileManager defaultManager] removeItemAtURL:weakSelf.videoURL error:nil];
+          if (backgroundRecordingID != UIBackgroundTaskInvalid) [[UIApplication sharedApplication] endBackgroundTask:backgroundRecordingID];
+          weakSelf.videoURL = nil;
+        }
+      }];
+    }
+  }];
 }
 
 @end

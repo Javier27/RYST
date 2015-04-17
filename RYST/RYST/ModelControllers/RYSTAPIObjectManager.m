@@ -45,19 +45,14 @@
 - (id)init
 {
   RKLogConfigureByName("RestKit/*", RKLogLevelOff)
-
+  
   // just use the RK standard for this, we can customized for RYST if we need to
-#ifdef DEBUG
-  RKLogConfigureByName("RestKit/Network", RKLogLevelError)
-#else
-  RKLogConfigureByName("RestKit/Network", RKLogLevelOff)
-#endif
-
-  RKLogConfigureByName("RestKit/ObjectMapping", RKLogLevelOff)
+  RKLogConfigureByName("RestKit/Network", RKLogLevelTrace)
+  RKLogConfigureByName("RestKit/ObjectMapping", RKLogLevelTrace)
 
   // using the base API string, uploads will be put directly on the operation queue until
   // we need to expand for more requests to that URL
-  self = [super initWithHTTPClient:[AFHTTPClient clientWithBaseURL:[NSURL URLWithString:@"http://"]]];
+  self = [super initWithHTTPClient:[AFHTTPClient clientWithBaseURL:[NSURL URLWithString:@"http://ryst-api.elasticbeanstalk.com"]]];
   if (self) {
     [self.HTTPClient registerHTTPOperationClass:[AFJSONRequestOperation class]];
     [self setAcceptHeaderWithMIMEType:RKMIMETypeJSON];

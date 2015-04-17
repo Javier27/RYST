@@ -6,11 +6,13 @@
 //  Copyright (c) 2015 Vissix. All rights reserved.
 //
 
+#import <RestKit/RestKit.h>
 #import "RYSTAPIClient.h"
 #import "RYSTAPIEndpoint.h"
 #import "RYSTAPIEndpointRequest.h"
 #import "RYSTAPIObjectManager.h"
 #import "RYSTEnvironment.h"
+#import "RYSTSessionController.h"
 
 @interface RYSTAPIClient ()
 
@@ -122,7 +124,7 @@
                                                          pathSuffix:nil
                                                              params:@{ @"n" : numAffirmations }
                                                              object:nil
-                                                         completion:[self mappingResultObjectDelivery:completionOrNil]] operation]];
+                                                         completion:[self mappingResultArrayDelivery:completionOrNil]] operation]];
 }
 
 - (void)addVideoWithURL:(NSString *)videoURL
@@ -142,18 +144,41 @@
                                                          pathSuffix:nil
                                                              params:nil
                                                              object:nil
-                                                         completion:[self mappingResultObjectDelivery:completionOrNil]] operation]];
+                                                         completion:[self mappingResultArrayDelivery:completionOrNil]] operation]];
 }
 
 #pragma mark UPLOAD Requests
 
 - (void)uploadVideo:(NSData *)movieData completion:(RYSTUploadResponseDelivery)completionOrNil
 {
-  [self startOperation:[[RYSTAPIEndpointRequest requestWithEndpoint:RYSTAPIEndpointNameUploadVideos
-                                                         pathSuffix:nil
-                                                             params:nil
-                                                             object:movieData
-                                                         completion:[self mappingResultObjectDelivery:completionOrNil]] operation]];
+  AFHTTPClient *httpClient = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:@"http://ryst-video-uploader.elasticbeanstalk.com"]];
+
+  NSMutableURLRequest *request = [httpClient multipartFormRequestWithMethod:@"POST"
+                                                                       path:@"/videos/generic/store"
+                                                                 parameters:nil
+                                                  constructingBodyWithBlock:^(id <AFMultipartFormData>formData) {
+                                                    [formData appendPartWithFileData:movieData
+                                                                                name:@"file"
+                                                                            fileName:@"affirmation.mov"
+                                                                            mimeType:@"video/quicktime"];
+                                                  }];
+
+  NSString *sessionToken = [RYSTSessionController sessionController].authToken;
+  if (0 < sessionToken.length) [request addValue:sessionToken forHTTPHeaderField:kHeaderRYSTToken];
+
+
+  AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+  [operation setUploadProgressBlock:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
+    NSLog(@"Sent %lld of %lld bytes", totalBytesWritten, totalBytesExpectedToWrite);
+  }];
+
+  [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+    NSLog(@"Video Uploaded Successfully");
+  } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    NSLog(@"Error : %@",  operation.responseString);
+  }];
+
+  [self startOperation:operation];
 }
 
 @end

@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "RYSTAPIEndpoint.h"
 
+extern NSString *const kHeaderRYSTToken;
+
 @class RKObjectRequestOperation, RYSTAPIClient;
 
 typedef void (^RYSTMappingResultDelivery)(RKMappingResult *result, NSError *error);

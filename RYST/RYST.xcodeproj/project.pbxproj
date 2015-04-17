@@ -14,7 +14,6 @@
 		F31B5B171ADE180400C3C332 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F31B5B161ADE180400C3C332 /* Images.xcassets */; };
 		F31B5B1A1ADE180400C3C332 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = F31B5B181ADE180400C3C332 /* LaunchScreen.xib */; };
 		F31B5B261ADE180400C3C332 /* RYSTTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B251ADE180400C3C332 /* RYSTTests.m */; };
-		F31B5B351ADE194500C3C332 /* RYSTAffirmation.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B341ADE194500C3C332 /* RYSTAffirmation.m */; };
 		F31B5B381ADE195800C3C332 /* RYSTToken.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B371ADE195800C3C332 /* RYSTToken.m */; };
 		F31B5B3B1ADE196400C3C332 /* RYSTUploadResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B3A1ADE196400C3C332 /* RYSTUploadResponse.m */; };
 		F31B5B3E1ADE196E00C3C332 /* RYSTVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B3D1ADE196E00C3C332 /* RYSTVideo.m */; };
@@ -31,10 +30,14 @@
 		F31B5B631ADE2A6200C3C332 /* RYSTIntroViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B621ADE2A6200C3C332 /* RYSTIntroViewController.m */; };
 		F31B5B661ADE2ECC00C3C332 /* RYSTVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B651ADE2ECC00C3C332 /* RYSTVideoViewController.m */; };
 		F31B5B6A1ADE31F400C3C332 /* RYSTAffirmationLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B691ADE31F400C3C332 /* RYSTAffirmationLabel.m */; };
+		F32FAD511AE0C3AF00676EB5 /* UILabel+FSHighlightAnimationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = F32FAD501AE0C3AF00676EB5 /* UILabel+FSHighlightAnimationAdditions.m */; };
 		F3DCF8051AE02CE200531174 /* RYSTCameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = F3DCF8041AE02CE200531174 /* RYSTCameraView.m */; };
 		F3DCF8081AE081A800531174 /* RYSTRecordButton.m in Sources */ = {isa = PBXBuildFile; fileRef = F3DCF8071AE081A800531174 /* RYSTRecordButton.m */; };
 		F3DCF80F1AE0923C00531174 /* RYSTVideoGalleryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F3DCF80E1AE0923C00531174 /* RYSTVideoGalleryViewController.m */; };
 		F3DCF8121AE0925200531174 /* RYSTPickAffirmationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F3DCF8111AE0925200531174 /* RYSTPickAffirmationViewController.m */; };
+		F3DCF8161AE0931500531174 /* RYSTBaseTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F3DCF8151AE0931500531174 /* RYSTBaseTableViewController.m */; };
+		F3DCF8191AE0940000531174 /* RYSTAffirmationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F3DCF8181AE0940000531174 /* RYSTAffirmationCell.m */; };
+		F3DCF81C1AE0B96600531174 /* RYSTAffirmation.m in Sources */ = {isa = PBXBuildFile; fileRef = F3DCF81B1AE0B96600531174 /* RYSTAffirmation.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,8 +65,6 @@
 		F31B5B1F1ADE180400C3C332 /* RYSTTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RYSTTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F31B5B241ADE180400C3C332 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F31B5B251ADE180400C3C332 /* RYSTTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RYSTTests.m; sourceTree = "<group>"; };
-		F31B5B331ADE194500C3C332 /* RYSTAffirmation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTAffirmation.h; sourceTree = "<group>"; };
-		F31B5B341ADE194500C3C332 /* RYSTAffirmation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTAffirmation.m; sourceTree = "<group>"; };
 		F31B5B361ADE195800C3C332 /* RYSTToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTToken.h; sourceTree = "<group>"; };
 		F31B5B371ADE195800C3C332 /* RYSTToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTToken.m; sourceTree = "<group>"; };
 		F31B5B391ADE196400C3C332 /* RYSTUploadResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTUploadResponse.h; sourceTree = "<group>"; };
@@ -87,8 +88,8 @@
 		F31B5B561ADE1FF200C3C332 /* RYSTSessionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTSessionController.m; sourceTree = "<group>"; };
 		F31B5B581ADE21A000C3C332 /* RYSTAPIError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTAPIError.h; sourceTree = "<group>"; };
 		F31B5B591ADE21A000C3C332 /* RYSTAPIError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTAPIError.m; sourceTree = "<group>"; };
-		F31B5B5B1ADE270A00C3C332 /* RYSTBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTBaseViewController.h; sourceTree = "<group>"; };
-		F31B5B5C1ADE270A00C3C332 /* RYSTBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTBaseViewController.m; sourceTree = "<group>"; };
+		F31B5B5B1ADE270A00C3C332 /* RYSTBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RYSTBaseViewController.h; path = ../RYSTBaseViewController.h; sourceTree = "<group>"; };
+		F31B5B5C1ADE270A00C3C332 /* RYSTBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RYSTBaseViewController.m; path = ../RYSTBaseViewController.m; sourceTree = "<group>"; };
 		F31B5B5E1ADE2A5200C3C332 /* RYSTSignInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTSignInViewController.h; sourceTree = "<group>"; };
 		F31B5B5F1ADE2A5200C3C332 /* RYSTSignInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTSignInViewController.m; sourceTree = "<group>"; };
 		F31B5B611ADE2A6200C3C332 /* RYSTIntroViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RYSTIntroViewController.h; path = ../RYSTIntroViewController.h; sourceTree = "<group>"; };
@@ -97,6 +98,8 @@
 		F31B5B651ADE2ECC00C3C332 /* RYSTVideoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTVideoViewController.m; sourceTree = "<group>"; };
 		F31B5B681ADE31F400C3C332 /* RYSTAffirmationLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTAffirmationLabel.h; sourceTree = "<group>"; };
 		F31B5B691ADE31F400C3C332 /* RYSTAffirmationLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTAffirmationLabel.m; sourceTree = "<group>"; };
+		F32FAD4F1AE0C3AF00676EB5 /* UILabel+FSHighlightAnimationAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+FSHighlightAnimationAdditions.h"; sourceTree = "<group>"; };
+		F32FAD501AE0C3AF00676EB5 /* UILabel+FSHighlightAnimationAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+FSHighlightAnimationAdditions.m"; sourceTree = "<group>"; };
 		F3DCF8031AE02CE200531174 /* RYSTCameraView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTCameraView.h; sourceTree = "<group>"; };
 		F3DCF8041AE02CE200531174 /* RYSTCameraView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTCameraView.m; sourceTree = "<group>"; };
 		F3DCF8061AE081A800531174 /* RYSTRecordButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTRecordButton.h; sourceTree = "<group>"; };
@@ -105,6 +108,12 @@
 		F3DCF80E1AE0923C00531174 /* RYSTVideoGalleryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTVideoGalleryViewController.m; sourceTree = "<group>"; };
 		F3DCF8101AE0925200531174 /* RYSTPickAffirmationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTPickAffirmationViewController.h; sourceTree = "<group>"; };
 		F3DCF8111AE0925200531174 /* RYSTPickAffirmationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTPickAffirmationViewController.m; sourceTree = "<group>"; };
+		F3DCF8141AE0931500531174 /* RYSTBaseTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTBaseTableViewController.h; sourceTree = "<group>"; };
+		F3DCF8151AE0931500531174 /* RYSTBaseTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTBaseTableViewController.m; sourceTree = "<group>"; };
+		F3DCF8171AE0940000531174 /* RYSTAffirmationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTAffirmationCell.h; sourceTree = "<group>"; };
+		F3DCF8181AE0940000531174 /* RYSTAffirmationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTAffirmationCell.m; sourceTree = "<group>"; };
+		F3DCF81A1AE0B96600531174 /* RYSTAffirmation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTAffirmation.h; sourceTree = "<group>"; };
+		F3DCF81B1AE0B96600531174 /* RYSTAffirmation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTAffirmation.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -198,8 +207,8 @@
 		F31B5B2F1ADE18DD00C3C332 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				F31B5B331ADE194500C3C332 /* RYSTAffirmation.h */,
-				F31B5B341ADE194500C3C332 /* RYSTAffirmation.m */,
+				F3DCF81A1AE0B96600531174 /* RYSTAffirmation.h */,
+				F3DCF81B1AE0B96600531174 /* RYSTAffirmation.m */,
 				F31B5B581ADE21A000C3C332 /* RYSTAPIError.h */,
 				F31B5B591ADE21A000C3C332 /* RYSTAPIError.m */,
 				F31B5B3F1ADE19E700C3C332 /* RYSTAPIResult.h */,
@@ -233,9 +242,8 @@
 		F31B5B311ADE190100C3C332 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				F3DCF8131AE092FB00531174 /* BaseViewControllers */,
 				F3DCF8091AE0921300531174 /* VideoSubViewControllers */,
-				F31B5B5B1ADE270A00C3C332 /* RYSTBaseViewController.h */,
-				F31B5B5C1ADE270A00C3C332 /* RYSTBaseViewController.m */,
 				F31B5B5E1ADE2A5200C3C332 /* RYSTSignInViewController.h */,
 				F31B5B5F1ADE2A5200C3C332 /* RYSTSignInViewController.m */,
 				F31B5B641ADE2ECC00C3C332 /* RYSTVideoViewController.h */,
@@ -263,6 +271,8 @@
 			children = (
 				F31B5B431ADE1A7D00C3C332 /* UIView+RJDConvenience.h */,
 				F31B5B441ADE1A7D00C3C332 /* UIView+RJDConvenience.m */,
+				F32FAD4F1AE0C3AF00676EB5 /* UILabel+FSHighlightAnimationAdditions.h */,
+				F32FAD501AE0C3AF00676EB5 /* UILabel+FSHighlightAnimationAdditions.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -270,6 +280,8 @@
 		F31B5B671ADE31BE00C3C332 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F3DCF8171AE0940000531174 /* RYSTAffirmationCell.h */,
+				F3DCF8181AE0940000531174 /* RYSTAffirmationCell.m */,
 				F31B5B681ADE31F400C3C332 /* RYSTAffirmationLabel.h */,
 				F31B5B691ADE31F400C3C332 /* RYSTAffirmationLabel.m */,
 				F3DCF8031AE02CE200531174 /* RYSTCameraView.h */,
@@ -291,6 +303,17 @@
 				F3DCF80E1AE0923C00531174 /* RYSTVideoGalleryViewController.m */,
 			);
 			path = VideoSubViewControllers;
+			sourceTree = "<group>";
+		};
+		F3DCF8131AE092FB00531174 /* BaseViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				F3DCF8141AE0931500531174 /* RYSTBaseTableViewController.h */,
+				F3DCF8151AE0931500531174 /* RYSTBaseTableViewController.m */,
+				F31B5B5B1ADE270A00C3C332 /* RYSTBaseViewController.h */,
+				F31B5B5C1ADE270A00C3C332 /* RYSTBaseViewController.m */,
+			);
+			path = BaseViewControllers;
 			sourceTree = "<group>";
 		};
 		F90EB6B053C93233E73D4937 /* Frameworks */ = {
@@ -437,9 +460,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				F31B5B601ADE2A5200C3C332 /* RYSTSignInViewController.m in Sources */,
+				F32FAD511AE0C3AF00676EB5 /* UILabel+FSHighlightAnimationAdditions.m in Sources */,
 				F31B5B541ADE1FE200C3C332 /* RYSTAPIClient.m in Sources */,
 				F31B5B381ADE195800C3C332 /* RYSTToken.m in Sources */,
 				F31B5B631ADE2A6200C3C332 /* RYSTIntroViewController.m in Sources */,
+				F3DCF8161AE0931500531174 /* RYSTBaseTableViewController.m in Sources */,
 				F31B5B571ADE1FF200C3C332 /* RYSTSessionController.m in Sources */,
 				F3DCF80F1AE0923C00531174 /* RYSTVideoGalleryViewController.m in Sources */,
 				F31B5B4B1ADE1F6F00C3C332 /* RYSTAPIEndpoint.m in Sources */,
@@ -449,7 +474,6 @@
 				F31B5B451ADE1A7D00C3C332 /* UIView+RJDConvenience.m in Sources */,
 				F31B5B6A1ADE31F400C3C332 /* RYSTAffirmationLabel.m in Sources */,
 				F31B5B0F1ADE180400C3C332 /* AppDelegate.m in Sources */,
-				F31B5B351ADE194500C3C332 /* RYSTAffirmation.m in Sources */,
 				F31B5B661ADE2ECC00C3C332 /* RYSTVideoViewController.m in Sources */,
 				F31B5B4E1ADE1F8000C3C332 /* RYSTEnvironment.m in Sources */,
 				F31B5B511ADE1FD400C3C332 /* RYSTAPIEndpointRequest.m in Sources */,
@@ -458,6 +482,8 @@
 				F3DCF8121AE0925200531174 /* RYSTPickAffirmationViewController.m in Sources */,
 				F3DCF8051AE02CE200531174 /* RYSTCameraView.m in Sources */,
 				F31B5B3B1ADE196400C3C332 /* RYSTUploadResponse.m in Sources */,
+				F3DCF8191AE0940000531174 /* RYSTAffirmationCell.m in Sources */,
+				F3DCF81C1AE0B96600531174 /* RYSTAffirmation.m in Sources */,
 				F31B5B5D1ADE270A00C3C332 /* RYSTBaseViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

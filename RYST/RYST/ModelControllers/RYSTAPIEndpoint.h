@@ -13,8 +13,7 @@ typedef enum : NSInteger {
   RYSTAPIEndpointNameSignIn,
   RYSTAPIEndpointNameGetAffirmations,
   RYSTAPIEndpointNameAddVideo,
-  RYSTAPIEndpointNameGetVideos,
-  RYSTAPIEndpointNameUploadVideos
+  RYSTAPIEndpointNameGetVideos
 } RYSTAPIEndpointName;
 
 @interface RYSTAPIEndpoint : NSObject

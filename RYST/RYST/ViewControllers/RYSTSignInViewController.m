@@ -13,6 +13,8 @@
 #import "RYSTVideoViewController.h"
 #import "UIView+RJDConvenience.h"
 
+#import "RYSTToken.h"
+
 @interface RYSTSignInViewController ()
 
 @property (nonatomic, strong) UITextField *usernameTextField;
@@ -77,34 +79,36 @@
 //  self.hasEverSignedIn = RYSTUserDefaultsGetHasEverSignedIn();
 //  RYSTUserDefaultsSetHasEverSignedIn(YES);
 
-  if (self.hasEverSignedIn) {
+//  if (self.hasEverSignedIn) {
+//
+//  } else {
+//
+//  }
+  
+    if (self.usernameTextField.text.length > 0) {
+      [self.usernameTextField endEditing:YES];
 
-  } else {
-
-  }
-
-  RYSTVideoViewController *mainVC = [[RYSTVideoViewController alloc] initShouldDisplayIntro:YES];
-  [self presentViewController:mainVC animated:YES completion:nil];
-
-  //  if (self.usernameTextField.text.length > 0) {
-  //    // make request, all requests of this nature should go through the session controller
-  //    // so that I am able to let the session controller handle all session related details
-  //    self.hasEverSignedIn = RYSTUserDefaultsGetHasEverSignedIn();
-  //    [[RYSTSessionController sessionController] signInWithEmail:self.usernameTextField.text
-  //                                               completionOrNil:^(RYSTToken *result, NSError *error) {
-  //                                                 if (result) {
-  //                                                   if (self.hasEverSignedIn) {
-  //                                                     // take to onboarding
-  //                                                   } else {
-  //                                                     // take to another screen
-  //                                                   }
-  //                                                 } else {
-  //                                                   // show error message
-  //                                                 }
-  //                                               }];
-  //  } else {
-  //    // show error message
-  //  }
+      // make request, all requests of this nature should go through the session controller
+      // so that I am able to let the session controller handle all session related details
+      self.hasEverSignedIn = RYSTUserDefaultsGetHasEverSignedIn();
+      [[RYSTSessionController sessionController] signInWithEmail:self.usernameTextField.text
+                                                 completionOrNil:^(RYSTToken *result, NSError *error) {
+                                                   if (result) {
+                                                     if (self.hasEverSignedIn) {
+                                                       // take to onboarding
+                                                     } else {
+                                                       // take to another screen
+                                                     }
+                                                     [RYSTSessionController sessionController].authToken = result.token;
+                                                     RYSTVideoViewController *mainVC = [[RYSTVideoViewController alloc] initShouldDisplayIntro:YES];
+                                                     [self presentViewController:mainVC animated:YES completion:nil];
+                                                   } else {
+                                                     // show error message
+                                                   }
+                                                 }];
+    } else {
+      // show error message
+    }
 }
 
 @end

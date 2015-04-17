@@ -7,8 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "RYSTBaseViewController.h"
+#import "RYSTBaseTableViewController.h"
+@class RYSTVideoViewController;
 
-@interface RYSTPickAffirmationViewController : RYSTBaseViewController
+@interface RYSTPickAffirmationViewController : RYSTBaseTableViewController
+
+@property (nonatomic, strong) RYSTVideoViewController *presenter;
+
+- (id)initWithStyle:(UITableViewStyle)style
+             parent:(RYSTVideoViewController *)parent;
 
 @end

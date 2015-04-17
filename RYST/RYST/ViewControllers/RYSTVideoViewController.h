@@ -6,13 +6,16 @@
 //  Copyright (c) 2015 Vissix. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "RYSTBaseViewController.h"
+@class RYSTAffirmation;
 
-@interface RYSTVideoViewController : UIViewController
+@interface RYSTVideoViewController : RYSTBaseViewController
 
 // this maybe should be a protocol and I should be assigning this as a delegate
 // pattern but leaving for now for simplicity, gets the job done
 - (void)dismissChild:(UIViewController *)child;
+- (void)dismissAffirmationTable:(RYSTAffirmation *)affirmation;
+- (void)dismissGallery;
 
 - (instancetype)initShouldDisplayIntro:(BOOL)shouldDisplayIntro;
 
