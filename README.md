@@ -3,6 +3,7 @@ RYST coding challenge for Overture
 
 ## Overview
 Below is a demonstration of the project
+
 ![RYST Gif](https://github.com/Javier27/RYST/raw/master/RYSTRecording.gif)
 
 This project took in total 6 hours to complete. 
