@@ -7,6 +7,7 @@
 //
 
 #import "RYSTVideo.h"
+#import "RYSTAffirmation.h"
 
 @implementation RYSTVideo
 
@@ -16,10 +17,12 @@
 {
   RKObjectMapping *mapping = [RKObjectMapping mappingForClass:self];
 
-  [mapping addAttributeMappingsFromDictionary:@{ @"class" : @"classString",
-                                                 @"id" : @"identifier",
-                                                 @"media_type" : @"mediaTypeString",
+  [mapping addAttributeMappingsFromDictionary:@{ @"id" : @"identifier",
                                                  @"url" : @"url" }];
+  
+  [mapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"affirmation"
+                                                                          toKeyPath:@"affirmation"
+                                                                        withMapping:[RYSTAffirmation mapping]]];
   return mapping;
 }
 

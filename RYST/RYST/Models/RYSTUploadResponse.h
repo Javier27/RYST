@@ -6,13 +6,15 @@
 //  Copyright (c) 2015 Vissix. All rights reserved.
 //
 
-#import "RYSTAPIResult.h"
-@class RYSTAffirmation;
+#import <Foundation/Foundation.h>
 
-@interface RYSTUploadResponse : NSObject <RYSTAPIResult>
+@interface RYSTUploadResponse : NSObject
 
-@property (nonatomic, strong) NSNumber *identifier;
+@property (nonatomic, copy) NSString *classString;
+@property (nonatomic, strong) NSString *identifier;
+@property (nonatomic, copy) NSString *mediaTypeString;
 @property (nonatomic, copy) NSString *url;
-@property (nonatomic, strong) RYSTAffirmation *affirmation;
+
++ (instancetype)objectFromJSONData:(NSData *)data;
 
 @end

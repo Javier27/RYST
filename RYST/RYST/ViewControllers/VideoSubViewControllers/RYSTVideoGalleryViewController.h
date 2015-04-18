@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "RYSTBaseViewController.h"
+#import "RYSTBaseTableViewController.h"
 
-@interface RYSTVideoGalleryViewController : RYSTBaseViewController
+@interface RYSTVideoGalleryViewController : RYSTBaseTableViewController
 
 @end

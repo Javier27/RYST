@@ -506,10 +506,11 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 - (void)sendVideo
 {
   [self.submitLabel removeFromSuperview];
+
   __weak typeof(self) weakSelf = self;
   [self.apiClient uploadVideo:[NSData dataWithContentsOfURL:self.videoURL] completion:^(RYSTUploadResponse *result, NSError *error) {
     if (result) {
-      [weakSelf.apiClient addVideoWithURL:result.url affirmationId:result.affirmation.affirmationIdentifier completion:^(RYSTVideo *result, NSError *error) {
+      [weakSelf.apiClient addVideoWithURL:result.url affirmationId:weakSelf.affirmation.affirmationIdentifier completion:^(RYSTVideo *result, NSError *error) {
         if (result) {
           UIBackgroundTaskIdentifier backgroundRecordingID = [weakSelf backgroundRecordingID];
           [weakSelf setBackgroundRecordingID:UIBackgroundTaskInvalid];

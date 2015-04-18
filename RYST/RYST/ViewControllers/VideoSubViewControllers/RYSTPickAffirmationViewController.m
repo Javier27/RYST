@@ -27,7 +27,7 @@ static NSString *CellIdentifier = @"CellIdentifier";
   self = [super initWithStyle:style];
   if (self) {
     // Custom initialization
-    self.title = @"Edit Data";
+    self.title = @"Pick Affirmation";
     _presenter = parent;
     _affirmationArray = [[NSArray alloc] init];
 

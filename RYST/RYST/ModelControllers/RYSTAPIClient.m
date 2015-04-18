@@ -10,9 +10,11 @@
 #import "RYSTAPIClient.h"
 #import "RYSTAPIEndpoint.h"
 #import "RYSTAPIEndpointRequest.h"
+#import "RYSTAPIError.h"
 #import "RYSTAPIObjectManager.h"
 #import "RYSTEnvironment.h"
 #import "RYSTSessionController.h"
+#import "RYSTUploadResponse.h"
 
 @interface RYSTAPIClient ()
 
@@ -153,32 +155,65 @@
 {
   AFHTTPClient *httpClient = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:@"http://ryst-video-uploader.elasticbeanstalk.com"]];
 
-  NSMutableURLRequest *request = [httpClient multipartFormRequestWithMethod:@"POST"
-                                                                       path:@"/videos/generic/store"
-                                                                 parameters:nil
-                                                  constructingBodyWithBlock:^(id <AFMultipartFormData>formData) {
-                                                    [formData appendPartWithFileData:movieData
-                                                                                name:@"file"
-                                                                            fileName:@"affirmation.mov"
-                                                                            mimeType:@"video/quicktime"];
-                                                  }];
+  NSMutableURLRequest *request = [httpClient requestWithMethod:@"POST" path:@"/videos/store/clip" parameters:nil];
 
   NSString *sessionToken = [RYSTSessionController sessionController].authToken;
   if (0 < sessionToken.length) [request addValue:sessionToken forHTTPHeaderField:kHeaderRYSTToken];
+  [request addValue:@"video/quicktime" forHTTPHeaderField:@"Content-Type"];
 
+  [request setHTTPBody:movieData];
 
   AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-  [operation setUploadProgressBlock:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
-    NSLog(@"Sent %lld of %lld bytes", totalBytesWritten, totalBytesExpectedToWrite);
-  }];
+
+//  [operation setUploadProgressBlock:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
+//    NSLog(@"Sent %lld of %lld bytes", totalBytesWritten, totalBytesExpectedToWrite);
+//  }];
 
   [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-    NSLog(@"Video Uploaded Successfully");
+    if (completionOrNil) completionOrNil([RYSTUploadResponse objectFromJSONData:responseObject], nil);
   } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-    NSLog(@"Error : %@",  operation.responseString);
+    if (completionOrNil) completionOrNil(nil, error);
   }];
 
-  [self startOperation:operation];
+  [operation start];
 }
+
+//- (void)uploadVideo:(NSData *)movieData  withTemp:(BOOL)temp completion:(RYSTUploadResponseDelivery)completionOrNil
+//{
+//  NSURL *requestURL = [NSURL URLWithString:@"http://ryst-video-uploader.elasticbeanstalk.com/videos/store/clip"];
+//  NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestURL];
+//  [request setHTTPMethod:@"POST"];
+//
+//  NSString *sessionToken = [RYSTSessionController sessionController].authToken;
+//  if (0 < sessionToken.length) [request addValue:sessionToken forHTTPHeaderField:kHeaderRYSTToken];
+//  [request addValue:@"video/quicktime" forHTTPHeaderField:@"Content-Type"];
+//  [request addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+//
+//  [request setHTTPBody:movieData];
+//
+//  RKObjectMapping *responseMapping = [RYSTUploadResponse mapping];
+//
+//  NSIndexSet *successStatusCodes = RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful);
+//  RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:responseMapping
+//                                                                                          method:RKRequestMethodAny
+//                                                                                     pathPattern:@"store/clip"
+//                                                                                         keyPath:nil
+//                                                                                     statusCodes:successStatusCodes];
+//
+//  RKObjectRequestOperation *operation = [[RKObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[ responseDescriptor ]];
+//
+//  RYSTMappingResultDelivery completion = [self mappingResultObjectDelivery:completionOrNil];
+//
+//  [operation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+//    if (completion) completion(mappingResult, nil);
+//  } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+//    if ([RKErrorDomain isEqualToString:error.domain]) {
+//      error = [RYSTAPIError NSErrorWithRestKitError:error statusCode:operation.HTTPRequestOperation.response.statusCode];
+//    }
+//    if (completion) completion(nil, error);
+//  }];
+//
+//  [self startOperation:operation];
+//}
 
 @end

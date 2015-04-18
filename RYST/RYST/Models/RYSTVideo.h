@@ -8,12 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "RYSTAPIResult.h"
+@class RYSTAffirmation;
 
 @interface RYSTVideo : NSObject <RYSTAPIResult>
 
-@property (nonatomic, copy) NSString *classString;
 @property (nonatomic, strong) NSNumber *identifier;
-@property (nonatomic, copy) NSString *mediaTypeString;
 @property (nonatomic, copy) NSString *url;
+@property (nonatomic, strong) RYSTAffirmation *affirmation;
 
 @end

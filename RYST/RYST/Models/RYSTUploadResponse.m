@@ -7,20 +7,27 @@
 //
 
 #import "RYSTUploadResponse.h"
-#import "RYSTAffirmation.h"
 
 @implementation RYSTUploadResponse
 
-+ (RKObjectMapping *)mapping
++ (instancetype)objectFromJSONData:(NSData *)data
 {
-  RKObjectMapping *mapping = [RKObjectMapping mappingForClass:self];
+  NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+  RYSTUploadResponse *response = [[RYSTUploadResponse alloc] init];
+  for (NSString *key in dictionary) {
+    id object = dictionary[key];
+    if ([key isEqualToString:@"class"]) {
+      response.classString = object;
+    } else if ([key isEqualToString:@"id"]) {
+      response.identifier = object;
+    } else if ([key isEqualToString:@"media_type"]) {
+      response.mediaTypeString = object;
+    } else if ([key isEqualToString:@"url"]) {
+      response.url = object;
+    }
+  }
 
-  [mapping addAttributeMappingsFromDictionary:@{ @"id" : @"identifier",
-                                                 @"url" : @"url" }];
-  [mapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"affirmation"
-                                                                          toKeyPath:@"affirmation"
-                                                                        withMapping:[RYSTAffirmation mapping]]];
-  return mapping;
+  return response;
 }
 
 @end

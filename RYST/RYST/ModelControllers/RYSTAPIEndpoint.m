@@ -25,7 +25,6 @@ static NSDictionary *_endpointsByName;
 #define MAPPING(CLASS) RKObjectMapping *mappingTo##CLASS = [CLASS mapping];
   MAPPING(RYSTAffirmation)
   MAPPING(RYSTToken)
-  MAPPING(RYSTUploadResponse)
   MAPPING(RYSTVideo)
   MAPPING(RYSTAPIError)
 #undef MAPPING
