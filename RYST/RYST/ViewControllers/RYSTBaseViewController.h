@@ -15,4 +15,7 @@
 // api client, currently this is not required by this application
 @property (nonatomic, strong) RYSTAPIClient *apiClient;
 
+- (void)finishFormOperation;
+- (void)beginFormOperationWithActivityCaption:(NSString *)activityCaption alpha:(CGFloat)alpha;
+
 @end

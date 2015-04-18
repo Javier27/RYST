@@ -31,6 +31,8 @@
 		F31B5B661ADE2ECC00C3C332 /* RYSTVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B651ADE2ECC00C3C332 /* RYSTVideoViewController.m */; };
 		F31B5B6A1ADE31F400C3C332 /* RYSTAffirmationLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = F31B5B691ADE31F400C3C332 /* RYSTAffirmationLabel.m */; };
 		F32FAD511AE0C3AF00676EB5 /* UILabel+FSHighlightAnimationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = F32FAD501AE0C3AF00676EB5 /* UILabel+FSHighlightAnimationAdditions.m */; };
+		F333E2061AE20DAD00DD823A /* RYSTEmptyStateView.m in Sources */ = {isa = PBXBuildFile; fileRef = F333E2051AE20DAD00DD823A /* RYSTEmptyStateView.m */; };
+		F333E2091AE20EAD00DD823A /* RYSTActivityIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = F333E2081AE20EAD00DD823A /* RYSTActivityIndicatorView.m */; };
 		F3812EE51AE1BA0900E232AC /* RYSTVideoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F3812EE41AE1BA0900E232AC /* RYSTVideoCell.m */; };
 		F3DCF8051AE02CE200531174 /* RYSTCameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = F3DCF8041AE02CE200531174 /* RYSTCameraView.m */; };
 		F3DCF8081AE081A800531174 /* RYSTRecordButton.m in Sources */ = {isa = PBXBuildFile; fileRef = F3DCF8071AE081A800531174 /* RYSTRecordButton.m */; };
@@ -101,6 +103,10 @@
 		F31B5B691ADE31F400C3C332 /* RYSTAffirmationLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTAffirmationLabel.m; sourceTree = "<group>"; };
 		F32FAD4F1AE0C3AF00676EB5 /* UILabel+FSHighlightAnimationAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+FSHighlightAnimationAdditions.h"; sourceTree = "<group>"; };
 		F32FAD501AE0C3AF00676EB5 /* UILabel+FSHighlightAnimationAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+FSHighlightAnimationAdditions.m"; sourceTree = "<group>"; };
+		F333E2041AE20DAD00DD823A /* RYSTEmptyStateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTEmptyStateView.h; sourceTree = "<group>"; };
+		F333E2051AE20DAD00DD823A /* RYSTEmptyStateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTEmptyStateView.m; sourceTree = "<group>"; };
+		F333E2071AE20EAD00DD823A /* RYSTActivityIndicatorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTActivityIndicatorView.h; sourceTree = "<group>"; };
+		F333E2081AE20EAD00DD823A /* RYSTActivityIndicatorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTActivityIndicatorView.m; sourceTree = "<group>"; };
 		F3812EE31AE1BA0900E232AC /* RYSTVideoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTVideoCell.h; sourceTree = "<group>"; };
 		F3812EE41AE1BA0900E232AC /* RYSTVideoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSTVideoCell.m; sourceTree = "<group>"; };
 		F3DCF8031AE02CE200531174 /* RYSTCameraView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSTCameraView.h; sourceTree = "<group>"; };
@@ -283,12 +289,16 @@
 		F31B5B671ADE31BE00C3C332 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F333E2071AE20EAD00DD823A /* RYSTActivityIndicatorView.h */,
+				F333E2081AE20EAD00DD823A /* RYSTActivityIndicatorView.m */,
 				F3DCF8171AE0940000531174 /* RYSTAffirmationCell.h */,
 				F3DCF8181AE0940000531174 /* RYSTAffirmationCell.m */,
 				F31B5B681ADE31F400C3C332 /* RYSTAffirmationLabel.h */,
 				F31B5B691ADE31F400C3C332 /* RYSTAffirmationLabel.m */,
 				F3DCF8031AE02CE200531174 /* RYSTCameraView.h */,
 				F3DCF8041AE02CE200531174 /* RYSTCameraView.m */,
+				F333E2041AE20DAD00DD823A /* RYSTEmptyStateView.h */,
+				F333E2051AE20DAD00DD823A /* RYSTEmptyStateView.m */,
 				F3DCF8061AE081A800531174 /* RYSTRecordButton.h */,
 				F3DCF8071AE081A800531174 /* RYSTRecordButton.m */,
 				F3812EE31AE1BA0900E232AC /* RYSTVideoCell.h */,
@@ -468,8 +478,10 @@
 				F32FAD511AE0C3AF00676EB5 /* UILabel+FSHighlightAnimationAdditions.m in Sources */,
 				F31B5B541ADE1FE200C3C332 /* RYSTAPIClient.m in Sources */,
 				F31B5B381ADE195800C3C332 /* RYSTToken.m in Sources */,
+				F333E2061AE20DAD00DD823A /* RYSTEmptyStateView.m in Sources */,
 				F31B5B631ADE2A6200C3C332 /* RYSTIntroViewController.m in Sources */,
 				F3DCF8161AE0931500531174 /* RYSTBaseTableViewController.m in Sources */,
+				F333E2091AE20EAD00DD823A /* RYSTActivityIndicatorView.m in Sources */,
 				F31B5B571ADE1FF200C3C332 /* RYSTSessionController.m in Sources */,
 				F3DCF80F1AE0923C00531174 /* RYSTVideoGalleryViewController.m in Sources */,
 				F31B5B4B1ADE1F6F00C3C332 /* RYSTAPIEndpoint.m in Sources */,

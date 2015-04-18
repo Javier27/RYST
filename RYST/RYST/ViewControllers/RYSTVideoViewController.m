@@ -285,7 +285,11 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
       }
     });
   } else {
-    // display an error message, need to select an affirmation
+    [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Whoops!", nil)
+                                message:NSLocalizedString(@"Looks like you need to pick an affirmation!", nil)
+                               delegate:nil
+                      cancelButtonTitle:NSLocalizedString(@"Lets do it!", nil)
+                      otherButtonTitles:nil, nil] show];
   }
 }
 
@@ -353,11 +357,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
   [self setLockInterfaceRotation:NO];
 
   [self uploadVideoWithUrl:outputFileURL];
-//  [[[ALAssetsLibrary alloc] init] writeVideoAtPathToSavedPhotosAlbum:outputFileURL completionBlock:^(NSURL *assetURL, NSError *error) {
-//    if (error) NSLog(@"%@", error);
-//    [[NSFileManager defaultManager] removeItemAtURL:outputFileURL error:nil];
-//    if (backgroundRecordingID != UIBackgroundTaskInvalid) [[UIApplication sharedApplication] endBackgroundTask:backgroundRecordingID];
-//  }];
 }
 
 #pragma mark Device Configuration
@@ -508,6 +507,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
   [self.submitLabel removeFromSuperview];
 
   __weak typeof(self) weakSelf = self;
+  [weakSelf beginFormOperationWithActivityCaption:NSLocalizedString(@"Saving Video...", nil) alpha:1.0f];
   [self.apiClient uploadVideo:[NSData dataWithContentsOfURL:self.videoURL] completion:^(RYSTUploadResponse *result, NSError *error) {
     if (result) {
       [weakSelf.apiClient addVideoWithURL:result.url affirmationId:weakSelf.affirmation.affirmationIdentifier completion:^(RYSTVideo *result, NSError *error) {
@@ -518,7 +518,10 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
           if (backgroundRecordingID != UIBackgroundTaskInvalid) [[UIApplication sharedApplication] endBackgroundTask:backgroundRecordingID];
           weakSelf.videoURL = nil;
         }
+        [weakSelf finishFormOperation];
       }];
+    } else {
+      [weakSelf finishFormOperation];
     }
   }];
 }

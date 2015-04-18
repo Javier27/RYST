@@ -32,10 +32,35 @@ static NSString *CellIdentifier = @"CellIdentifier";
     _affirmationArray = [[NSArray alloc] init];
 
     __weak typeof(self) weakSelf = self;
+    [weakSelf beginFormOperationWithActivityCaption:NSLocalizedString(@"Loading Affirmations...", nil)
+                                              alpha:1.0f];
     [self.apiClient getAffirmations:@10 completion:^(NSArray *result, NSError *error) {
+      [weakSelf finishFormOperation];
       weakSelf.affirmationArray = result;
       [weakSelf.tableView reloadData];
     }];
+
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 50.0f)];
+    headerView.backgroundColor = [UIColor lightGrayColor];
+
+    UIButton *backButtonContainer = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
+    [backButtonContainer addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
+
+    UIButton *backButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 10, 30, 24)];
+    [backButton setBackgroundImage:[UIImage imageNamed:@"Left"] forState:UIControlStateNormal];
+    [backButton addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
+    [backButtonContainer addSubview:backButton];
+
+    UILabel *headerLabel = [[UILabel alloc] init];
+    headerLabel.text = NSLocalizedString(@"Pick Affirmation", nil);
+    headerLabel.font = [UIFont fontWithName:@"Avenir-Medium" size:24.0f];
+    headerLabel.textColor = [UIColor blackColor];
+    [headerLabel sizeToFit];
+    headerLabel.center = headerView.center;
+    [headerView addSubview:headerLabel];
+
+    [headerView addSubview:backButtonContainer];
+    self.tableView.tableHeaderView = headerView;
   }
   return self;
 }
@@ -113,6 +138,11 @@ static NSString *CellIdentifier = @"CellIdentifier";
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
   return 60.0f;
+}
+
+- (void)goBack
+{
+  [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

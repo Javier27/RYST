@@ -25,15 +25,38 @@ static NSString *CellIdentifier = @"CellIdentifier";
 {
   self = [super initWithStyle:style];
   if (self) {
-    // Custom initialization
-    self.title = @"View Videos";
     _videoArray = [[NSArray alloc] init];
 
     __weak typeof(self) weakSelf = self;
+    [weakSelf beginFormOperationWithActivityCaption:NSLocalizedString(@"Loading Videos...", nil)
+                                              alpha:1.0f];
     [self.apiClient getVideos:@10 completion:^(NSArray *result, NSError *error) {
+      [weakSelf finishFormOperation];
       weakSelf.videoArray = result;
       [weakSelf.tableView reloadData];
     }];
+
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 50.0f)];
+    headerView.backgroundColor = [UIColor lightGrayColor];
+
+    UIButton *backButtonContainer = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
+    [backButtonContainer addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
+
+    UIButton *backButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 10, 30, 24)];
+    [backButton setBackgroundImage:[UIImage imageNamed:@"Left"] forState:UIControlStateNormal];
+    [backButton addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
+    [backButtonContainer addSubview:backButton];
+
+    UILabel *headerLabel = [[UILabel alloc] init];
+    headerLabel.text = NSLocalizedString(@"View Videos", nil);
+    headerLabel.font = [UIFont fontWithName:@"Avenir-Medium" size:24.0f];
+    headerLabel.textColor = [UIColor blackColor];
+    [headerLabel sizeToFit];
+    headerLabel.center = headerView.center;
+    [headerView addSubview:headerLabel];
+
+    [headerView addSubview:backButtonContainer];
+    self.tableView.tableHeaderView = headerView;
   }
   return self;
 }
@@ -97,18 +120,9 @@ static NSString *CellIdentifier = @"CellIdentifier";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
   RYSTVideo *video = self.videoArray[indexPath.row];
-  NSURL *videoURL = [NSURL fileURLWithPath:video.url];
-  MPMoviePlayerController *moviePlayer = [[MPMoviePlayerController alloc] initWithContentURL:videoURL];
-
-  [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(moviePlayDidFinish:)
-                                               name:MPMoviePlayerPlaybackDidFinishNotification
-                                             object:moviePlayer];
-
-  moviePlayer.controlStyle = MPMovieControlStyleDefault;
-  moviePlayer.shouldAutoplay = YES;
-  [self.view addSubview:moviePlayer.view];
-  [moviePlayer setFullscreen:YES animated:YES];
+  NSURL *videoURL = [NSURL URLWithString:video.url];
+  MPMoviePlayerViewController *viewController = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
+  [self presentMoviePlayerViewControllerAnimated:viewController];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -121,14 +135,9 @@ static NSString *CellIdentifier = @"CellIdentifier";
   return 60.0f;
 }
 
-- (void)moviePlayDidFinish:(NSNotification*)notification
+- (void)goBack
 {
-  MPMoviePlayerController *player = [notification object];
-  [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                  name:MPMoviePlayerPlaybackDidFinishNotification
-                                                object:player];
-
-  if ([player respondsToSelector:@selector(setFullscreen:animated:)]) [player.view removeFromSuperview];
+  [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end
