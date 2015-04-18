@@ -3,14 +3,16 @@ RYST coding challenge for Overture
 
 ## Overview
 Below is a demonstration of the project
-![alt tag](https://raw.github.com/Javier27/RYST/master/RYSTRecording.gif)
+![alt tag](https://github.com/Javier27/RYST/blob/master/RYSTRecording.gif)
 
 This project took in total 6 hours to complete. 
 It utilizes the RYSTAPIs which are documented here:
 - [RYST APIs](https://gist.github.com/alloy-d/29cb57765ace223d6350) (APIs for storing and accessing RYST videos)
 
 I will not go into detail with the code here, as you can see in the above gif, the app has the following structure:
+
 Login, Intro Screens, Primary Camera Screen, Subscreens
+
 The Primary Camera Screen contains most of the navigation for the project, from here you will navigate to the affirmation list screen as well as your previously created affirmation videos. Additionally this is the screen where you record and submit affirmations.
 
 ## Things left undone
