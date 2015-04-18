@@ -53,6 +53,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 @property (nonatomic) BOOL lockInterfaceRotation;
 @property (nonatomic) id runtimeErrorHandlingObserver;
 
+@property (nonatomic) BOOL isObserver;
+
 @end
 
 @implementation RYSTVideoViewController
@@ -163,6 +165,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     }
   });
 
+  self.isObserver = NO;
+
   if (self.shouldDisplayIntro) {
     RYSTIntroViewController *vc = [[RYSTIntroViewController alloc] init];
     [self addChildViewController:vc];
@@ -189,14 +193,18 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AVCaptureDeviceSubjectAreaDidChangeNotification object:[[self videoDeviceInput] device]];
     [[NSNotificationCenter defaultCenter] removeObserver:[self runtimeErrorHandlingObserver]];
 
-    [self removeObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" context:SessionRunningAndDeviceAuthorizedContext];
-    [self removeObserver:self forKeyPath:@"movieFileOutput.recording" context:RecordingContext];
+    if (self.isObserver) {
+      [self removeObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" context:SessionRunningAndDeviceAuthorizedContext];
+      [self removeObserver:self forKeyPath:@"movieFileOutput.recording" context:RecordingContext];
+      self.isObserver = NO;
+    }
   });
 }
 
 - (void)showCameraView
 {
   dispatch_async([self sessionQueue], ^{
+    self.isObserver = YES;
     [self addObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:SessionRunningAndDeviceAuthorizedContext];
     [self addObserver:self forKeyPath:@"movieFileOutput.recording" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:RecordingContext];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(subjectAreaDidChange:) name:AVCaptureDeviceSubjectAreaDidChangeNotification object:[[self videoDeviceInput] device]];
@@ -440,6 +448,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 - (void)presentVideoGallery
 {
   RYSTVideoGalleryViewController *vc = [[RYSTVideoGalleryViewController alloc] init];
+  vc.presenter = self;
   [self presentViewController:vc animated:YES completion:nil];
 }
 

@@ -8,6 +8,7 @@
 
 #import <MediaPlayer/MediaPlayer.h>
 #import "RYSTVideoGalleryViewController.h"
+#import "RYSTVideoViewController.h"
 #import "RYSTVideoCell.h"
 #import "RYSTVideo.h"
 
@@ -137,7 +138,7 @@ static NSString *CellIdentifier = @"CellIdentifier";
 
 - (void)goBack
 {
-  [self dismissViewControllerAnimated:YES completion:nil];
+  [self.presenter dismissGallery];
 }
 
 @end

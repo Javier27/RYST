@@ -8,7 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "RYSTBaseTableViewController.h"
+@class RYSTVideoViewController;
 
 @interface RYSTVideoGalleryViewController : RYSTBaseTableViewController
+
+@property (nonatomic, strong) RYSTVideoViewController *presenter;
 
 @end

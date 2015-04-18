@@ -142,7 +142,7 @@ static NSString *CellIdentifier = @"CellIdentifier";
 
 - (void)goBack
 {
-  [self dismissViewControllerAnimated:YES completion:nil];
+  [self.presenter dismissAffirmationTable:nil];
 }
 
 @end
