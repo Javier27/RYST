@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+@class RYSTVideo;
 
 @interface RYSTVideoCell : UITableViewCell
+
+@property (nonatomic, strong) RYSTVideo *video;
 
 @end

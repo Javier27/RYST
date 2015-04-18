@@ -6,8 +6,10 @@
 //  Copyright (c) 2015 Vissix. All rights reserved.
 //
 
+#import <MediaPlayer/MediaPlayer.h>
 #import "RYSTVideoGalleryViewController.h"
 #import "RYSTVideoCell.h"
+#import "RYSTVideo.h"
 
 static NSString *CellIdentifier = @"CellIdentifier";
 
@@ -87,12 +89,26 @@ static NSString *CellIdentifier = @"CellIdentifier";
     [cell setLayoutMargins:UIEdgeInsetsZero];
   }
 
+  cell.video = self.videoArray[indexPath.row];
+
   return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  // implement video display technology here!
+  RYSTVideo *video = self.videoArray[indexPath.row];
+  NSURL *videoURL = [NSURL fileURLWithPath:video.url];
+  MPMoviePlayerController *moviePlayer = [[MPMoviePlayerController alloc] initWithContentURL:videoURL];
+
+  [[NSNotificationCenter defaultCenter] addObserver:self
+                                           selector:@selector(moviePlayDidFinish:)
+                                               name:MPMoviePlayerPlaybackDidFinishNotification
+                                             object:moviePlayer];
+
+  moviePlayer.controlStyle = MPMovieControlStyleDefault;
+  moviePlayer.shouldAutoplay = YES;
+  [self.view addSubview:moviePlayer.view];
+  [moviePlayer setFullscreen:YES animated:YES];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -103,6 +119,16 @@ static NSString *CellIdentifier = @"CellIdentifier";
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
   return 60.0f;
+}
+
+- (void)moviePlayDidFinish:(NSNotification*)notification
+{
+  MPMoviePlayerController *player = [notification object];
+  [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                  name:MPMoviePlayerPlaybackDidFinishNotification
+                                                object:player];
+
+  if ([player respondsToSelector:@selector(setFullscreen:animated:)]) [player.view removeFromSuperview];
 }
 
 @end
