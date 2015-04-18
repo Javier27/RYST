@@ -13,6 +13,8 @@
 #import "RYSTVideoViewController.h"
 #import "UIView+RJDConvenience.h"
 
+#import "RYSTNiceBanner.h"
+
 #import "RYSTToken.h"
 
 @interface RYSTSignInViewController ()
@@ -75,7 +77,8 @@
 
 - (void)signIn
 {
-
+  // leaving this commented out, I'd typically code this so the tutorial only runs the first time
+  // but for demonstrative purposes I'll just leave it in
 //  self.hasEverSignedIn = RYSTUserDefaultsGetHasEverSignedIn();
 //  RYSTUserDefaultsSetHasEverSignedIn(YES);
 

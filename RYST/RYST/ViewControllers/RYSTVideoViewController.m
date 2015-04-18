@@ -6,14 +6,16 @@
 //  Copyright (c) 2015 Vissix. All rights reserved.
 //
 
-#import "RYSTVideoViewController.h"
-#import "RYSTIntroViewController.h"
-#import "RYSTCameraView.h"
-#import "RYSTRecordButton.h"
-#import "RYSTPickAffirmationViewController.h"
-#import "RYSTVideoGalleryViewController.h"
 #import "RYSTAffirmation.h"
+#import "RYSTCameraView.h"
+#import "RYSTIntroViewController.h"
+#import "RYSTNiceBanner.h"
+#import "RYSTPickAffirmationViewController.h"
+#import "RYSTRecordButton.h"
+#import "RYSTSaveVideoViewController.h"
 #import "RYSTUploadResponse.h"
+#import "RYSTVideoViewController.h"
+#import "RYSTVideoGalleryViewController.h"
 
 #import "UIView+RJDConvenience.h"
 #import "UILabel+FSHighlightAnimationAdditions.h"
@@ -26,7 +28,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 @interface RYSTVideoViewController () <AVCaptureFileOutputRecordingDelegate>
 
-@property (nonatomic, strong) RYSTIntroViewController *childViewController;
+@property (nonatomic, strong) UIViewController *childViewController;
 @property (nonatomic) BOOL shouldDisplayIntro;
 @property (nonatomic, strong) NSURL *videoURL;
 
@@ -361,10 +363,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL fromConnections:(NSArray *)connections error:(NSError *)error
 {
   if (error) NSLog(@"%@", error);
-
   [self setLockInterfaceRotation:NO];
-
-  [self uploadVideoWithUrl:outputFileURL];
+  [self presentSaveVideo:outputFileURL];
 }
 
 #pragma mark Device Configuration
@@ -452,21 +452,46 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
   [self presentViewController:vc animated:YES completion:nil];
 }
 
-- (void)dismissChild:(UIViewController *)child
+- (void)presentSaveVideo:(NSURL *)url
+{
+  _videoURL = url;
+  RYSTSaveVideoViewController *vc = [[RYSTSaveVideoViewController alloc] initWithURLString:url presenter:self];
+  [self addChildViewController:vc];
+  [self.view addSubview:vc.view];
+  [vc didMoveToParentViewController:self];
+
+  _childViewController = vc;
+
+  // animate it
+  vc.view.frame = CGRectMake(0, CGRectGetHeight(self.view.bounds), CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds));
+  [UIView animateWithDuration:0.3f
+                   animations:^{
+                     vc.view.frame = CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds));
+                   }];
+}
+
+- (void)dismissChild:(UIViewController *)child animated:(BOOL)animated
 {
   if (child == self.childViewController) {
-    [UIView animateWithDuration:0.3f
-                     animations:^{
-                       self.childViewController.view.layer.transform = CATransform3DScale(CATransform3DIdentity,
-                                                                                          0.01f,
-                                                                                          0.01f,
-                                                                                          1.0f);
-                     } completion:^(BOOL finished) {
-                       [self.childViewController willMoveToParentViewController:nil];
-                       [self.childViewController.view removeFromSuperview];
-                       [self.childViewController removeFromParentViewController];
-                       [self showCameraView];
-                     }];
+    if (animated) {
+      [UIView animateWithDuration:0.3f
+                       animations:^{
+                         self.childViewController.view.layer.transform = CATransform3DScale(CATransform3DIdentity,
+                                                                                            0.01f,
+                                                                                            0.01f,
+                                                                                            1.0f);
+                       } completion:^(BOOL finished) {
+                         [self.childViewController willMoveToParentViewController:nil];
+                         [self.childViewController.view removeFromSuperview];
+                         [self.childViewController removeFromParentViewController];
+                         [self showCameraView];
+                       }];
+    } else {
+      [self.childViewController willMoveToParentViewController:nil];
+      [self.childViewController.view removeFromSuperview];
+      [self.childViewController removeFromParentViewController];
+      [self showCameraView];
+    }
   } // abort if not
 }
 
@@ -488,51 +513,50 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
   }];
 }
 
-# pragma mark video upload
-
-- (void)uploadVideoWithUrl:(NSURL *)url
+- (void)dismissSaveVideoWithSave:(BOOL)shouldSave
 {
-  _videoURL = url;
+  if (shouldSave) {
+    __weak typeof(self) weakSelf = self;
+    NSData *videoData = [NSData dataWithContentsOfURL:self.videoURL];
+    [weakSelf beginFormOperationWithActivityCaption:NSLocalizedString(@"Saving Video...", nil) alpha:1.0f];
+    [self.apiClient uploadVideo:videoData completion:^(RYSTUploadResponse *result, NSError *error) {
+      if (result) {
+        [weakSelf.apiClient addVideoWithURL:result.url affirmationId:weakSelf.affirmation.affirmationIdentifier completion:^(RYSTVideo *result, NSError *error) {
+          if (result) {
+            UIBackgroundTaskIdentifier backgroundRecordingID = [weakSelf backgroundRecordingID];
+            [weakSelf setBackgroundRecordingID:UIBackgroundTaskInvalid];
+            [[NSFileManager defaultManager] removeItemAtURL:weakSelf.videoURL error:nil];
+            if (backgroundRecordingID != UIBackgroundTaskInvalid) [[UIApplication sharedApplication] endBackgroundTask:backgroundRecordingID];
+            [weakSelf presentSaveSucessBanner];
+          }
+          [weakSelf finishFormOperation];
+        }];
+      } else {
+        [weakSelf finishFormOperation];
+      }
+    }];
 
-  UILabel *submitLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.view.bounds) - 80, CGRectGetWidth(self.view.bounds), 80)];
-  submitLabel.backgroundColor = [UIColor colorWithRed:174.0f/255.0f green:0.0f/255.0f blue:220.0f/255.0f alpha:1.0f];
-  submitLabel.textColor = [UIColor whiteColor];
-  submitLabel.font = [UIFont fontWithName:@"Avenir-Roman" size:25.0f];
-  submitLabel.textAlignment = NSTextAlignmentCenter;
-  [submitLabel setTextWithChangeAnimation:NSLocalizedString(@"Swipe to Share >", nil)];
-  submitLabel.userInteractionEnabled = YES;
-
-  UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(sendVideo)];
-  swipe.direction = UISwipeGestureRecognizerDirectionRight;
-  swipe.numberOfTouchesRequired = 1;
-  [submitLabel addGestureRecognizer:swipe];
-
-  [self.view addSubview:submitLabel];
-  _submitLabel = submitLabel;
+  }
+  [self dismissChild:self.childViewController animated:!shouldSave];
+  self.videoURL = nil;
 }
 
-- (void)sendVideo
+- (void)presentSaveSucessBanner
 {
-  [self.submitLabel removeFromSuperview];
-
-  __weak typeof(self) weakSelf = self;
-  [weakSelf beginFormOperationWithActivityCaption:NSLocalizedString(@"Saving Video...", nil) alpha:1.0f];
-  [self.apiClient uploadVideo:[NSData dataWithContentsOfURL:self.videoURL] completion:^(RYSTUploadResponse *result, NSError *error) {
-    if (result) {
-      [weakSelf.apiClient addVideoWithURL:result.url affirmationId:weakSelf.affirmation.affirmationIdentifier completion:^(RYSTVideo *result, NSError *error) {
-        if (result) {
-          UIBackgroundTaskIdentifier backgroundRecordingID = [weakSelf backgroundRecordingID];
-          [weakSelf setBackgroundRecordingID:UIBackgroundTaskInvalid];
-          [[NSFileManager defaultManager] removeItemAtURL:weakSelf.videoURL error:nil];
-          if (backgroundRecordingID != UIBackgroundTaskInvalid) [[UIApplication sharedApplication] endBackgroundTask:backgroundRecordingID];
-          weakSelf.videoURL = nil;
-        }
-        [weakSelf finishFormOperation];
-      }];
-    } else {
-      [weakSelf finishFormOperation];
-    }
-  }];
+  RYSTNiceBanner *banner = [[RYSTNiceBanner alloc] initWithFrame:CGRectMake(0,
+                                                                            self.view.center.y - kBannerHeight/2,
+                                                                            CGRectGetWidth(self.view.bounds),
+                                                                            kBannerHeight)
+                                                         message:NSLocalizedString(@"Nice!", nil)];
+  [self.view addSubview:banner];
+  [UIView animateWithDuration:1.0f
+                        delay:0.5f
+                      options:0
+                   animations:^{
+                     banner.alpha = 0.0f;
+                   } completion:^(BOOL finished) {
+                     [banner removeFromSuperview];
+                   }];
 }
 
 @end

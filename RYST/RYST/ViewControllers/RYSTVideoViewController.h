@@ -13,9 +13,10 @@
 
 // this maybe should be a protocol and I should be assigning this as a delegate
 // pattern but leaving for now for simplicity, gets the job done
-- (void)dismissChild:(UIViewController *)child;
+- (void)dismissChild:(UIViewController *)child animated:(BOOL)animated;
 - (void)dismissAffirmationTable:(RYSTAffirmation *)affirmation;
 - (void)dismissGallery;
+- (void)dismissSaveVideoWithSave:(BOOL)shouldSave;
 
 - (instancetype)initShouldDisplayIntro:(BOOL)shouldDisplayIntro;
 

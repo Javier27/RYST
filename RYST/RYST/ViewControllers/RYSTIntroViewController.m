@@ -176,7 +176,7 @@ static const CGFloat kOverlapForRotation = 100.0f;
 
 - (void)begin
 {
-  [self.presenter dismissChild:self];
+  [self.presenter dismissChild:self animated:YES];
 }
 
 @end
