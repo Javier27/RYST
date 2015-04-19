@@ -33,7 +33,7 @@ static NSDictionary *_endpointsByName;
   NSMutableIndexSet *failureStatusCodes = RKStatusCodeIndexSetForClass(RKStatusCodeClassClientError).mutableCopy;
   [failureStatusCodes addIndexes:RKStatusCodeIndexSetForClass(RKStatusCodeClassServerError)];
 
-  RKResponseDescriptor *errorDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:mappingToRYSTAPIError method:RKRequestMethodAny pathPattern:nil keyPath:@"error" statusCodes:failureStatusCodes];
+  RKResponseDescriptor *errorDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:mappingToRYSTAPIError method:RKRequestMethodAny pathPattern:nil keyPath:nil statusCodes:failureStatusCodes];
 
   NSMutableDictionary *endpointsByName = [NSMutableDictionary dictionary];
 

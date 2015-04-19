@@ -10,18 +10,14 @@
 #import "RYSTSessionController.h"
 #import "RYSTEnvironment.h"
 #import "RYSTIntroViewController.h"
+#import "RYSTToken.h"
 #import "RYSTVideoViewController.h"
 #import "UIView+RJDConvenience.h"
-
-#import "RYSTNiceBanner.h"
-
-#import "RYSTToken.h"
 
 @interface RYSTSignInViewController ()
 
 @property (nonatomic, strong) UITextField *usernameTextField;
 @property (nonatomic, strong) UIButton *usernameSubmitButton;
-@property (nonatomic) BOOL hasEverSignedIn;
 
 @end
 
@@ -77,41 +73,35 @@
 
 - (void)signIn
 {
-  // leaving this commented out, I'd typically code this so the tutorial only runs the first time
-  // but for demonstrative purposes I'll just leave it in
-//  self.hasEverSignedIn = RYSTUserDefaultsGetHasEverSignedIn();
-//  RYSTUserDefaultsSetHasEverSignedIn(YES);
+  if (self.usernameTextField.text.length > 0) {
+    [self.usernameTextField endEditing:YES];
 
-//  if (self.hasEverSignedIn) {
-//
-//  } else {
-//
-//  }
-  
-    if (self.usernameTextField.text.length > 0) {
-      [self.usernameTextField endEditing:YES];
-
-      // make request, all requests of this nature should go through the session controller
-      // so that I am able to let the session controller handle all session related details
-      self.hasEverSignedIn = RYSTUserDefaultsGetHasEverSignedIn();
-      [[RYSTSessionController sessionController] signInWithEmail:self.usernameTextField.text
-                                                 completionOrNil:^(RYSTToken *result, NSError *error) {
-                                                   if (result) {
-                                                     if (self.hasEverSignedIn) {
-                                                       // take to onboarding
-                                                     } else {
-                                                       // take to another screen
-                                                     }
-                                                     [RYSTSessionController sessionController].authToken = result.token;
-                                                     RYSTVideoViewController *mainVC = [[RYSTVideoViewController alloc] initShouldDisplayIntro:YES];
-                                                     [self presentViewController:mainVC animated:YES completion:nil];
-                                                   } else {
-                                                     // show error message
-                                                   }
-                                                 }];
-    } else {
-      // show error message
-    }
+    // make request, all requests of this nature should go through the session controller
+    // so that I am able to let the session controller handle all session related details
+    BOOL hasEverSignedIn = RYSTUserDefaultsGetHasEverSignedIn();
+    [[RYSTSessionController sessionController] signInWithEmail:self.usernameTextField.text
+                                               completionOrNil:^(RYSTToken *result, NSError *error) {
+                                                 if (result) {
+                                                   [RYSTSessionController sessionController].authToken = result.token;
+                                                   RYSTVideoViewController *mainVC = [[RYSTVideoViewController alloc] initShouldDisplayIntro:!hasEverSignedIn];
+                                                   [self presentViewController:mainVC animated:YES completion:^{
+                                                     [mainVC doneBeingPresented];
+                                                   }];
+                                                 } else {
+                                                   [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Sorry!", nil)
+                                                                               message:NSLocalizedString(@"Looks like we're having difficulties, come back and try again later.", nil)
+                                                                              delegate:nil
+                                                                     cancelButtonTitle:NSLocalizedString(@"Dismiss", nil)
+                                                                     otherButtonTitles:nil, nil] show];
+                                                 }
+                                               }];
+  } else {
+    [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Hold up!", nil)
+                                message:NSLocalizedString(@"Looks like you're missing a username, please enter one and try again.", nil)
+                               delegate:nil
+                      cancelButtonTitle:NSLocalizedString(@"Dismiss", nil)
+                      otherButtonTitles:nil, nil] show];
+  }
 }
 
 @end

@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 Vissix. All rights reserved.
 //
 
+#import "RYSTAccountViewController.h"
 #import "RYSTAffirmation.h"
 #import "RYSTCameraView.h"
 #import "RYSTIntroViewController.h"
@@ -15,7 +16,6 @@
 #import "RYSTSaveVideoViewController.h"
 #import "RYSTUploadResponse.h"
 #import "RYSTVideoViewController.h"
-#import "RYSTVideoGalleryViewController.h"
 
 #import "UIView+RJDConvenience.h"
 #import "UILabel+FSHighlightAnimationAdditions.h"
@@ -30,6 +30,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 @property (nonatomic, strong) UIViewController *childViewController;
 @property (nonatomic) BOOL shouldDisplayIntro;
+@property (nonatomic) BOOL shouldExplainView;
 @property (nonatomic, strong) NSURL *videoURL;
 
 @property (nonatomic, strong) RYSTCameraView *previewView;
@@ -76,6 +77,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
   self = [super initWithNibName:nil bundle:nil];
   if (self) {
     _shouldDisplayIntro = shouldDisplayIntro;
+    _shouldExplainView = shouldDisplayIntro;
   }
 
   return self;
@@ -104,13 +106,13 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
   [self.view addSubview:_pickAffirmationButton];
 
   _viewAffirmationsButton = [[UIButton alloc] initWithFrame:CGRectMake(20, CGRectGetHeight(self.view.bounds) - 65, 45, 45)];
-  [_viewAffirmationsButton setBackgroundImage:[UIImage imageNamed:@"movie-yellow"] forState:UIControlStateNormal];
+  [_viewAffirmationsButton setBackgroundImage:[UIImage imageNamed:@"user-yellow"] forState:UIControlStateNormal];
   [_viewAffirmationsButton addTarget:self action:@selector(presentVideoGallery) forControlEvents:UIControlEventTouchUpInside];
   [self.view addSubview:_viewAffirmationsButton];
 
-  _affirmationLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 20)];
+  _affirmationLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 24)];
   _affirmationLabel.backgroundColor = [UIColor colorWithRed:174.0f/255.0f green:0.0f/255.0f blue:220.0f/255.0f alpha:1.0f];
-  _affirmationLabel.font = [UIFont fontWithName:@"Avenir-Roman" size:12.0f];
+  _affirmationLabel.font = [UIFont fontWithName:@"Avenir-Roman" size:14.0f];
   _affirmationLabel.textColor = [UIColor whiteColor];
   _affirmationLabel.textAlignment = NSTextAlignmentCenter;
   _affirmationLabel.text = NSLocalizedString(@"Pick an affirmation!", nil);
@@ -177,6 +179,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     vc.presenter = self;
 
     _childViewController = vc;
+  } else {
+    [self beginFormOperationWithActivityCaption:@"Signing In..." alpha:1.0f];
   }
 }
 
@@ -187,8 +191,9 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
   }
 }
 
-- (void)viewDidDisappear:(BOOL)animated
+- (void)viewWillDisappear:(BOOL)animated
 {
+  [super viewWillDisappear:animated];
   dispatch_async([self sessionQueue], ^{
     [[self session] stopRunning];
 
@@ -203,12 +208,23 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
   });
 }
 
+- (void)dealloc
+{
+  if (self.isObserver) {
+    [self removeObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" context:SessionRunningAndDeviceAuthorizedContext];
+    [self removeObserver:self forKeyPath:@"movieFileOutput.recording" context:RecordingContext];
+    self.isObserver = NO;
+  }
+}
+
 - (void)showCameraView
 {
   dispatch_async([self sessionQueue], ^{
-    self.isObserver = YES;
-    [self addObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:SessionRunningAndDeviceAuthorizedContext];
-    [self addObserver:self forKeyPath:@"movieFileOutput.recording" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:RecordingContext];
+    if (!self.isObserver) {
+      [self addObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:SessionRunningAndDeviceAuthorizedContext];
+      [self addObserver:self forKeyPath:@"movieFileOutput.recording" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:RecordingContext];
+      self.isObserver = YES;
+    }
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(subjectAreaDidChange:) name:AVCaptureDeviceSubjectAreaDidChangeNotification object:[[self videoDeviceInput] device]];
 
     __weak typeof(self) weakSelf = self;
@@ -447,7 +463,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 - (void)presentVideoGallery
 {
-  RYSTVideoGalleryViewController *vc = [[RYSTVideoGalleryViewController alloc] init];
+  RYSTAccountViewController *vc = [[RYSTAccountViewController alloc] init];
   vc.presenter = self;
   [self presentViewController:vc animated:YES completion:nil];
 }
@@ -485,6 +501,9 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
                          [self.childViewController.view removeFromSuperview];
                          [self.childViewController removeFromParentViewController];
                          [self showCameraView];
+                         if (self.shouldExplainView) {
+                           [self explainView];
+                         }
                        }];
     } else {
       [self.childViewController willMoveToParentViewController:nil];
@@ -493,6 +512,48 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
       [self showCameraView];
     }
   } // abort if not
+}
+
+- (void)explainView
+{
+  // only explain the first time
+  self.shouldExplainView = NO;
+
+  self.view.userInteractionEnabled = NO;
+  UILabel *explanationLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 120, 80)];
+  explanationLabel.backgroundColor = [UIColor whiteColor];
+  explanationLabel.font = [UIFont fontWithName:@"Avenir-Roman" size:14.0f];
+  explanationLabel.textColor = [UIColor blackColor];
+  explanationLabel.numberOfLines = 0;
+  explanationLabel.textAlignment = NSTextAlignmentCenter;
+  explanationLabel.layer.cornerRadius = 20.0f;
+  explanationLabel.clipsToBounds = YES;
+  [self.view addSubview:explanationLabel];
+
+  // show the explanations one at a time
+  explanationLabel.text = NSLocalizedString(@"Your selected affirmation shows up here", nil);
+  explanationLabel.center = CGPointMake(70, 70);
+
+  [UIView animateWithDuration:2.0f delay:2.0f options:0 animations:^{
+    explanationLabel.alpha = 0.0f;
+  } completion:^(BOOL finished) {
+    explanationLabel.text = NSLocalizedString(@"Select affirmations by clicking here", nil);
+    explanationLabel.center = CGPointMake(CGRectGetWidth(self.view.bounds) - 70, CGRectGetHeight(self.view.bounds) - 140);
+    explanationLabel.alpha = 1.0f;
+    [UIView animateWithDuration:2.0f delay:1.8f options:0 animations:^{
+      explanationLabel.alpha = 0.0f;
+    } completion:^(BOOL finished) {
+      explanationLabel.text = NSLocalizedString(@"Go here to view videos and account information", nil);
+      explanationLabel.center = CGPointMake(70, CGRectGetHeight(self.view.bounds) - 140);
+      explanationLabel.alpha = 1.0f;
+      [UIView animateWithDuration:2.0f delay:1.8f options:0 animations:^{
+        explanationLabel.alpha = 0.0f;
+      } completion:^(BOOL finished) {
+        [explanationLabel removeFromSuperview];
+        self.view.userInteractionEnabled = YES;
+      }];
+    }];
+  }];
 }
 
 - (void)dismissAffirmationTable:(RYSTAffirmation *)affirmation
@@ -506,7 +567,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
   }];
 }
 
-- (void)dismissGallery
+- (void)dismissAccount
 {
   [self dismissViewControllerAnimated:YES completion:^{
     [self showCameraView];
@@ -522,22 +583,25 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [self.apiClient uploadVideo:videoData completion:^(RYSTUploadResponse *result, NSError *error) {
       if (result) {
         [weakSelf.apiClient addVideoWithURL:result.url affirmationId:weakSelf.affirmation.affirmationIdentifier completion:^(RYSTVideo *result, NSError *error) {
-          if (result) {
-            UIBackgroundTaskIdentifier backgroundRecordingID = [weakSelf backgroundRecordingID];
-            [weakSelf setBackgroundRecordingID:UIBackgroundTaskInvalid];
-            [[NSFileManager defaultManager] removeItemAtURL:weakSelf.videoURL error:nil];
-            if (backgroundRecordingID != UIBackgroundTaskInvalid) [[UIApplication sharedApplication] endBackgroundTask:backgroundRecordingID];
-            [weakSelf presentSaveSucessBanner];
-          }
-          [weakSelf finishFormOperation];
+          if (result) [weakSelf presentSaveSucessBanner];
+          [weakSelf cleanupUploadRequest];
         }];
       } else {
-        [weakSelf finishFormOperation];
+        [weakSelf cleanupUploadRequest];
       }
     }];
-
   }
+  
   [self dismissChild:self.childViewController animated:!shouldSave];
+}
+
+- (void)cleanupUploadRequest
+{
+  [self finishFormOperation];
+  UIBackgroundTaskIdentifier backgroundRecordingID = [self backgroundRecordingID];
+  [self setBackgroundRecordingID:UIBackgroundTaskInvalid];
+  [[NSFileManager defaultManager] removeItemAtURL:self.videoURL error:nil];
+  if (backgroundRecordingID != UIBackgroundTaskInvalid) [[UIApplication sharedApplication] endBackgroundTask:backgroundRecordingID];
   self.videoURL = nil;
 }
 
@@ -550,13 +614,28 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
                                                          message:NSLocalizedString(@"Nice!", nil)];
   [self.view addSubview:banner];
   [UIView animateWithDuration:1.0f
-                        delay:0.5f
+                        delay:1.0f
                       options:0
                    animations:^{
                      banner.alpha = 0.0f;
                    } completion:^(BOOL finished) {
                      [banner removeFromSuperview];
                    }];
+}
+
+- (void)doneBeingPresented
+{
+  if (!self.shouldDisplayIntro) {
+    [self finishFormOperation];
+  }
+}
+
+- (void)signOut
+{
+  // can only be called from account
+  [self dismissViewControllerAnimated:YES completion:^{
+    [self dismissViewControllerAnimated:YES completion:nil];
+  }];
 }
 
 @end

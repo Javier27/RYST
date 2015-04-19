@@ -142,9 +142,10 @@
 
 - (void)getVideos:(NSNumber *)affirmationId completion:(RYSTArrayDelivery)completionOrNil
 {
+  NSDictionary *params = affirmationId ? @{ @"affirmation_id" : affirmationId } : nil;
   [self startOperation:[[RYSTAPIEndpointRequest requestWithEndpoint:RYSTAPIEndpointNameGetVideos
                                                          pathSuffix:nil
-                                                             params:nil
+                                                             params:params
                                                              object:nil
                                                          completion:[self mappingResultArrayDelivery:completionOrNil]] operation]];
 }
@@ -165,10 +166,6 @@
 
   AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
 
-//  [operation setUploadProgressBlock:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
-//    NSLog(@"Sent %lld of %lld bytes", totalBytesWritten, totalBytesExpectedToWrite);
-//  }];
-
   [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
     if (completionOrNil) completionOrNil([RYSTUploadResponse objectFromJSONData:responseObject], nil);
   } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -177,43 +174,5 @@
 
   [operation start];
 }
-
-//- (void)uploadVideo:(NSData *)movieData  withTemp:(BOOL)temp completion:(RYSTUploadResponseDelivery)completionOrNil
-//{
-//  NSURL *requestURL = [NSURL URLWithString:@"http://ryst-video-uploader.elasticbeanstalk.com/videos/store/clip"];
-//  NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestURL];
-//  [request setHTTPMethod:@"POST"];
-//
-//  NSString *sessionToken = [RYSTSessionController sessionController].authToken;
-//  if (0 < sessionToken.length) [request addValue:sessionToken forHTTPHeaderField:kHeaderRYSTToken];
-//  [request addValue:@"video/quicktime" forHTTPHeaderField:@"Content-Type"];
-//  [request addValue:@"application/json" forHTTPHeaderField:@"Accept"];
-//
-//  [request setHTTPBody:movieData];
-//
-//  RKObjectMapping *responseMapping = [RYSTUploadResponse mapping];
-//
-//  NSIndexSet *successStatusCodes = RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful);
-//  RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:responseMapping
-//                                                                                          method:RKRequestMethodAny
-//                                                                                     pathPattern:@"store/clip"
-//                                                                                         keyPath:nil
-//                                                                                     statusCodes:successStatusCodes];
-//
-//  RKObjectRequestOperation *operation = [[RKObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[ responseDescriptor ]];
-//
-//  RYSTMappingResultDelivery completion = [self mappingResultObjectDelivery:completionOrNil];
-//
-//  [operation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-//    if (completion) completion(mappingResult, nil);
-//  } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-//    if ([RKErrorDomain isEqualToString:error.domain]) {
-//      error = [RYSTAPIError NSErrorWithRestKitError:error statusCode:operation.HTTPRequestOperation.response.statusCode];
-//    }
-//    if (completion) completion(nil, error);
-//  }];
-//
-//  [self startOperation:operation];
-//}
 
 @end

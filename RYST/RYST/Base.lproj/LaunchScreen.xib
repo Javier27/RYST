@@ -12,33 +12,33 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="camera-backdrop" translatesAutoresizingMaskIntoConstraints="NO" id="fyR-Dh-xYM">
-                    <rect key="frame" x="127" y="136" width="226" height="208"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="208" id="fKF-qN-L31"/>
-                        <constraint firstAttribute="width" constant="226" id="pgn-wz-xf9"/>
-                    </constraints>
+                    <rect key="frame" x="190" y="190" width="100" height="100"/>
                 </imageView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Positivity is Contagious" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LNW-A4-aaZ">
-                    <rect key="frame" x="136" y="325" width="208" height="28"/>
-                    <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="20"/>
-                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="RYST" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AiQ-Cd-jYt">
+                    <rect key="frame" x="150" y="77" width="181" height="103"/>
+                    <fontDescription key="fontDescription" name="Avenir-Black" family="Avenir" pointSize="75"/>
+                    <color key="textColor" red="1" green="0.67088545107079356" blue="0.28834778755688717" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="RYST" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AiQ-Cd-jYt">
-                    <rect key="frame" x="162" y="196" width="157" height="89"/>
-                    <fontDescription key="fontDescription" name="Avenir-Black" family="Avenir" pointSize="65"/>
-                    <color key="textColor" red="0.84390782828282829" green="0.35142563326549964" blue="0.065765758494558624" alpha="1" colorSpace="calibratedRGB"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Positivity is Contagious, Share Your Experience" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LNW-A4-aaZ">
+                    <rect key="frame" x="111" y="304" width="259" height="66"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="259" id="Svw-vi-K9x"/>
+                        <constraint firstAttribute="height" constant="66" id="wsU-VE-wYU"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="20"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
             <color key="backgroundColor" red="0.22280377147423755" green="0.46016340864825611" blue="0.80719302398989889" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
-                <constraint firstAttribute="centerX" secondItem="LNW-A4-aaZ" secondAttribute="centerX" id="BGl-QQ-9YB"/>
-                <constraint firstAttribute="centerY" secondItem="fyR-Dh-xYM" secondAttribute="centerY" id="QCs-0M-Fdl"/>
-                <constraint firstItem="LNW-A4-aaZ" firstAttribute="top" secondItem="AiQ-Cd-jYt" secondAttribute="bottom" constant="40" id="nFc-hd-EhI"/>
-                <constraint firstAttribute="centerX" secondItem="AiQ-Cd-jYt" secondAttribute="centerX" id="pNr-pO-nxr"/>
-                <constraint firstAttribute="centerY" secondItem="AiQ-Cd-jYt" secondAttribute="centerY" id="uZc-xL-06A"/>
-                <constraint firstAttribute="centerX" secondItem="fyR-Dh-xYM" secondAttribute="centerX" id="xEQ-P7-ncd"/>
+                <constraint firstAttribute="centerY" secondItem="fyR-Dh-xYM" secondAttribute="centerY" id="3WA-wR-clc"/>
+                <constraint firstItem="fyR-Dh-xYM" firstAttribute="top" secondItem="AiQ-Cd-jYt" secondAttribute="bottom" constant="10" id="PHK-Ia-bPu"/>
+                <constraint firstAttribute="centerX" secondItem="fyR-Dh-xYM" secondAttribute="centerX" id="nQn-XY-dAg"/>
+                <constraint firstAttribute="centerX" secondItem="AiQ-Cd-jYt" secondAttribute="centerX" id="q3R-DE-DtZ"/>
+                <constraint firstItem="LNW-A4-aaZ" firstAttribute="top" secondItem="fyR-Dh-xYM" secondAttribute="bottom" constant="14" id="uyc-cz-Ei7"/>
+                <constraint firstAttribute="centerX" secondItem="LNW-A4-aaZ" secondAttribute="centerX" id="vOT-QK-WDU"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

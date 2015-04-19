@@ -12,8 +12,7 @@ extern NSString *const RYSTAPIErrorDomain;
 
 @interface RYSTAPIError : NSObject <RYSTAPIResult>
 
-@property (nonatomic, copy) NSString *title;
-@property (nonatomic, copy) NSString *message;
+@property (nonatomic, copy) NSString *error;
 
 - (NSError *)NSError;
 + (NSError *)NSErrorWithRestKitError:(NSError *)restKitError statusCode:(NSInteger)statusCode;

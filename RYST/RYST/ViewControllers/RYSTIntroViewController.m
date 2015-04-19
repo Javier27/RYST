@@ -59,9 +59,9 @@ static const CGFloat kOverlapForRotation = 100.0f;
   [overlayButton addTarget:self action:@selector(begin) forControlEvents:UIControlEventTouchUpInside];
   [screen1 addSubview:overlayButton];
 
-  UIView *screen4 = [[UIView alloc] initWithFrame:screenFrame];
-  screen4.backgroundColor = [UIColor colorWithRed:63.0f/255.0f green:225.0f/255.0f blue:181.0f/255.0f alpha:1.0f];
-  [_scrollView addSubview:screen4];
+  UIView *screen2 = [[UIView alloc] initWithFrame:screenFrame];
+  screen2.backgroundColor = [UIColor colorWithRed:63.0f/255.0f green:225.0f/255.0f blue:181.0f/255.0f alpha:1.0f];
+  [_scrollView addSubview:screen2];
   screenFrame.origin.y += CGRectGetHeight(self.view.bounds);
 
   UILabel *explanationLabel = [[UILabel alloc] init];
@@ -80,45 +80,45 @@ static const CGFloat kOverlapForRotation = 100.0f;
   explanationLabel2.numberOfLines = 0;
   explanationLabel2.textAlignment = NSTextAlignmentCenter;
 
-  UIImageView *upArrow4 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"up-arrow"]];
-  upArrow4.translatesAutoresizingMaskIntoConstraints = NO;
+  UIImageView *upArrow2 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"up-arrow"]];
+  upArrow2.translatesAutoresizingMaskIntoConstraints = NO;
 
-  [screen4 addSubview:explanationLabel];
-  [screen4 addSubview:explanationLabel2];
-  [screen4 addSubview:upArrow4];
-  [screen4 centerChildren:@[explanationLabel2]];
-  [screen4 centerChildrenHorizontally:@[upArrow4, explanationLabel]];
+  [screen2 addSubview:explanationLabel];
+  [screen2 addSubview:explanationLabel2];
+  [screen2 addSubview:upArrow2];
+  [screen2 centerChildren:@[explanationLabel2]];
+  [screen2 centerChildrenHorizontally:@[upArrow2, explanationLabel]];
 
-  [screen4 convenientConstraintsWithVisualFormats:@[ @"V:[upArrow]-50-|",
+  [screen2 convenientConstraintsWithVisualFormats:@[ @"V:[upArrow]-50-|",
                                                      @"V:[explanationLabel]-25-[explanationLabel2]" ]
                                           options:0
                                           metrics:nil
-                                         children:@{ @"upArrow" : upArrow4,
+                                         children:@{ @"upArrow" : upArrow2,
                                                      @"explanationLabel" : explanationLabel,
                                                      @"explanationLabel2" : explanationLabel2 }];
 
-  UIView *screen5 = [[UIView alloc] initWithFrame:screenFrame];
-  screen5.backgroundColor = [UIColor colorWithRed:174.0f/255.0f green:0.0f/255.0f blue:220.0f/255.0f alpha:1.0f];
-  [_scrollView addSubview:screen5];
+  UIView *screen3 = [[UIView alloc] initWithFrame:screenFrame];
+  screen3.backgroundColor = [UIColor colorWithRed:174.0f/255.0f green:0.0f/255.0f blue:220.0f/255.0f alpha:1.0f];
+  [_scrollView addSubview:screen3];
   screenFrame.origin.y += CGRectGetHeight(self.view.bounds);
 
   RYSTAffirmationLabel *positiveLabel = [[RYSTAffirmationLabel alloc] init];
   positiveLabel.translatesAutoresizingMaskIntoConstraints = NO;
   positiveLabel.text = NSLocalizedString(@"STAY POSITIVE!", nil);
   positiveLabel.textAlignment = NSTextAlignmentCenter;
-  [screen5 addSubview:positiveLabel];
-  [screen5 centerChildren:@[positiveLabel]];
+  [screen3 addSubview:positiveLabel];
+  [screen3 centerChildren:@[positiveLabel]];
 
-  UIImageView *upArrow5 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"up-arrow"]];
-  upArrow5.translatesAutoresizingMaskIntoConstraints = NO;
-  [screen5 addSubview:upArrow5];
-  [screen5 centerChildrenHorizontally:@[upArrow5]];
-  [screen5 convenientConstraintsWithVisualFormats:@[ @"V:[upArrow]-50-|",
+  UIImageView *upArrow3 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"up-arrow"]];
+  upArrow3.translatesAutoresizingMaskIntoConstraints = NO;
+  [screen3 addSubview:upArrow3];
+  [screen3 centerChildrenHorizontally:@[upArrow3]];
+  [screen3 convenientConstraintsWithVisualFormats:@[ @"V:[upArrow]-50-|",
                                                      @"V:[positiveLabel(70)]",
                                                      @"H:[positiveLabel(240)]" ]
                                           options:0
                                           metrics:nil
-                                         children:@{ @"upArrow" : upArrow5,
+                                         children:@{ @"upArrow" : upArrow3,
                                                      @"positiveLabel" : positiveLabel }];
 
   _scrollView.contentOffset = CGPointMake(0, (kNumberOfOnboardingScreens - 1) * CGRectGetHeight(self.view.bounds));

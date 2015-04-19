@@ -24,7 +24,7 @@
     _affirmationLabel = [[UILabel alloc] init];
     _affirmationLabel.translatesAutoresizingMaskIntoConstraints = NO;
     _affirmationLabel.font = [UIFont fontWithName:@"Avenir-Black" size:24.0f];
-    _affirmationLabel.textColor = [UIColor colorWithRed:174.0f/255.0f green:0.0f/255.0f blue:220.0f/255.0f alpha:1.0f];
+    _affirmationLabel.textColor = [UIColor whiteColor];
     _affirmationLabel.center = self.center;
     _affirmationLabel.textAlignment = NSTextAlignmentCenter;
     [self addSubview:_affirmationLabel];

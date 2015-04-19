@@ -14,7 +14,7 @@
 {
   self = [super initWithFrame:frame];
   if (self) {
-    self.backgroundColor = [UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:1.0f];
+    self.backgroundColor = [UIColor colorWithRed:76.0/255.0 green:217.0/255.0 blue:100.0/255.0 alpha:1.0];
 
     UIImageView *checkmarkImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
     checkmarkImageView.center = CGPointMake(self.center.x, 30);

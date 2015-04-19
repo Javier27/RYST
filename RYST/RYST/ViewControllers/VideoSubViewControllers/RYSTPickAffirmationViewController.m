@@ -46,7 +46,7 @@ static NSString *CellIdentifier = @"CellIdentifier";
     UIButton *backButtonContainer = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
     [backButtonContainer addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
 
-    UIButton *backButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 10, 30, 24)];
+    UIButton *backButton = [[UIButton alloc] initWithFrame:CGRectMake(15, 17, 25, 20)];
     [backButton setBackgroundImage:[UIImage imageNamed:@"Left"] forState:UIControlStateNormal];
     [backButton addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
     [backButtonContainer addSubview:backButton];
@@ -117,6 +117,12 @@ static NSString *CellIdentifier = @"CellIdentifier";
   }
 
   cell.affirmation = self.affirmationArray[indexPath.row];
+
+  if (indexPath.row % 2 == 0) {
+    cell.backgroundColor = [UIColor colorWithRed:(111.0/255.0) green:(168.0/255.0) blue:(255.0/255.0) alpha:1.0];
+  } else {
+    cell.backgroundColor = [UIColor colorWithRed:(161.0/255.0) green:(198.0/255.0) blue:(255.0/255.0) alpha:1.0];
+  }
 
   return cell;
 }

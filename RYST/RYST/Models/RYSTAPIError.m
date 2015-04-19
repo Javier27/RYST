@@ -39,7 +39,7 @@ NSString *const RYSTAPIErrorUserInfoKeyErrorObject = @"com.davis.development.RYS
 {
   // assuming this is the mapping, easily manipulated to fit the RYSTAPI
   RKObjectMapping *mapping = [RKObjectMapping mappingForClass:self];
-  [mapping addAttributeMappingsFromArray:@[ @"title", @"message" ]];
+  [mapping addAttributeMappingsFromArray:@[@"error"]];
   return mapping;
 }
 

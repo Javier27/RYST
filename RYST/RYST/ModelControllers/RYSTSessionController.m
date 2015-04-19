@@ -31,9 +31,6 @@
 
 - (BOOL)isSignedIn
 {
-  // for now we will just assume that auth tokens don't expire,
-  // in practice I would reauth here
-  self.authToken = RYSTUserDefaultsGetAuthToken();
   return self.authToken.length > 0;
 }
 
@@ -42,7 +39,6 @@
   [self.apiClient signInWithName:name completion:^(RYSTToken *result, NSError *error) {
     if (result) {
       self.authToken = result.token;
-      RYSTUserDefaultsSetAuthToken(result.token);
       RYSTUserDefaultsSetHasEverSignedIn(YES);
     }
 
@@ -52,13 +48,12 @@
 
 - (void)signOut
 {
-  RYSTUserDefaultsSetAuthToken(@"");
+  self.authToken = nil;
 }
 
 - (void)resetApp
 {
-  RYSTUserDefaultsSetAuthToken(@"");
-  RYSTUserDefaultsSetHasEverSignedIn(YES);
+  RYSTUserDefaultsSetHasEverSignedIn(NO);
 }
 
 

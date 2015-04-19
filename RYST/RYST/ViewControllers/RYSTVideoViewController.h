@@ -15,9 +15,11 @@
 // pattern but leaving for now for simplicity, gets the job done
 - (void)dismissChild:(UIViewController *)child animated:(BOOL)animated;
 - (void)dismissAffirmationTable:(RYSTAffirmation *)affirmation;
-- (void)dismissGallery;
+- (void)dismissAccount;
 - (void)dismissSaveVideoWithSave:(BOOL)shouldSave;
+- (void)signOut;
 
+- (void)doneBeingPresented;
 - (instancetype)initShouldDisplayIntro:(BOOL)shouldDisplayIntro;
 
 @end

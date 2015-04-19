@@ -9,32 +9,14 @@
 #import "RYSTEnvironment.h"
 
 static NSString *const kRYSTEUserDefaultsKeyHasEverSignedIn = @"com.davis.development.RYST.userDefaults.hasEverSignedIn";
-static NSString *const kRYSTEUserDefaultsKeyAuthToken = @"com.davis.development.RYST.userDefaults.authToken";
 
 @implementation RYSTEnvironment
 
 void RYSTUserDefaultsInit(void)
 {
-  NSDictionary *defaultValues = @{ kRYSTEUserDefaultsKeyHasEverSignedIn : @NO,
-                                   kRYSTEUserDefaultsKeyAuthToken : @""};
+  NSDictionary *defaultValues = @{ kRYSTEUserDefaultsKeyHasEverSignedIn : @NO };
   [[NSUserDefaults standardUserDefaults] registerDefaults:defaultValues];
   [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-NSString *RYSTUserDefaultsGetAuthToken(void)
-{
-  return [[NSUserDefaults standardUserDefaults] objectForKey:kRYSTEUserDefaultsKeyAuthToken];
-}
-
-void RYSTUserDefaultsSetAuthToken(NSString *authToken)
-{
-  [[NSUserDefaults standardUserDefaults] setObject:authToken forKey:kRYSTEUserDefaultsKeyAuthToken];
-  [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-void RYSTUserDefaultsInvalidateAuthToken(void)
-{
-  RYSTUserDefaultsSetAuthToken(@"");
 }
 
 BOOL RYSTUserDefaultsGetHasEverSignedIn(void)
