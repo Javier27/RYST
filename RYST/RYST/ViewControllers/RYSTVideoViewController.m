@@ -186,6 +186,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 - (void)viewWillAppear:(BOOL)animated
 {
+  [super viewWillDisappear:animated];
   if (!self.shouldDisplayIntro) {
     [self showCameraView];
   }
