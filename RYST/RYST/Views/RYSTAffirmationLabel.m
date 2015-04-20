@@ -13,8 +13,9 @@
 - (void)setText:(NSString *)text
 {
   [super setText:text];
-  self.font = [UIFont fontWithName:@"Avenir-Heavy" size:22.0f];
+  self.font = [UIFont fontWithName:@"Avenir-BlackOblique" size:20.0f];
   self.textColor = [UIColor whiteColor];
+  self.numberOfLines = 0;
 }
 
 - (void)drawRect:(CGRect)rect
@@ -29,14 +30,14 @@
   CGFloat w = CGRectGetWidth(self.bounds);
 
   [path moveToPoint:CGPointMake(minX, maxY)];
-  [path addLineToPoint:CGPointMake(minX + w/7.0f, minY)];
+  [path addLineToPoint:CGPointMake(minX + w/6.0f, minY)];
   [path addLineToPoint:CGPointMake(maxX, minY)];
-  [path addLineToPoint:CGPointMake(maxX - w/8.0f, maxY)];
+  [path addLineToPoint:CGPointMake(maxX - w/7.0f, maxY)];
   [path addLineToPoint:CGPointMake(minX, maxY)];
 
   [path closePath];
 
-  [[UIColor colorWithWhite:1.0f alpha:0.5f] setFill];
+  [[self.rectColor colorWithAlphaComponent:0.5f] setFill];
   [path fill];
 }
 

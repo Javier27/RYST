@@ -2,18 +2,21 @@
 //  RYSTVideoViewController.m
 //  RYST
 //
-//  Created by Richie Davis on 4/15/15.
+//  Created by Richie Davis on 4/20/15.
 //  Copyright (c) 2015 Vissix. All rights reserved.
 //
 
-#import "RYSTAccountViewController.h"
+#import "RYSTAffirmationLabel.h"
+#import "RYSTVideoViewController.h"
+#import "UIView+RJDConvenience.h"
+
+#import "RYSTLoadAndRepeatViewController.h"
+#import "RYSTVideoPreviewViewController.h"
+
+#import "RYSTRecordButton.h"
+
 #import "RYSTAffirmation.h"
 #import "RYSTCameraView.h"
-#import "RYSTIntroViewController.h"
-#import "RYSTNiceBanner.h"
-#import "RYSTPickAffirmationViewController.h"
-#import "RYSTRecordButton.h"
-#import "RYSTSaveVideoViewController.h"
 #import "RYSTUploadResponse.h"
 #import "RYSTVideoViewController.h"
 
@@ -23,12 +26,21 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 
+// this represents our decision of when the user should rotate between screens
+static const CGFloat kOverlapForRotation = 100.0f;
+static const NSInteger kNumberOfOnboardingScreens = 3;
+
 static void * RecordingContext = &RecordingContext;
 static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDeviceAuthorizedContext;
 
-@interface RYSTVideoViewController () <AVCaptureFileOutputRecordingDelegate>
+@interface RYSTVideoViewController () <UIScrollViewDelegate, AVCaptureFileOutputRecordingDelegate>
 
-@property (nonatomic, strong) UIViewController *childViewController;
+@property (nonatomic, strong) UIScrollView *scrollView;
+@property (nonatomic) NSInteger currentScreenIndex; // index 0 is start
+
+@property (nonatomic, strong) UIViewController *previewChild;
+@property (nonatomic, strong) UIViewController *saveChild;
+
 @property (nonatomic) BOOL shouldDisplayIntro;
 @property (nonatomic) BOOL shouldExplainView;
 @property (nonatomic, strong) NSURL *videoURL;
@@ -36,10 +48,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 @property (nonatomic, strong) RYSTCameraView *previewView;
 @property (nonatomic, strong) RYSTRecordButton *recordButton;
 @property (nonatomic, strong) UIButton *flipCameraButton;
-@property (nonatomic, strong) UIButton *pickAffirmationButton;
-@property (nonatomic, strong) UIButton *viewAffirmationsButton;
-@property (nonatomic, strong) UILabel *affirmationLabel;
-@property (nonatomic, strong) UILabel *submitLabel;
 
 @property (nonatomic, strong) RYSTAffirmation *affirmation;
 
@@ -57,6 +65,16 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 @property (nonatomic) id runtimeErrorHandlingObserver;
 
 @property (nonatomic) BOOL isObserver;
+@property (nonatomic) BOOL shouldDismissPreview;
+
+@property (nonatomic, strong) UISwipeGestureRecognizer *rightSwipe;
+@property (nonatomic, strong) UISwipeGestureRecognizer *leftSwipe;
+
+@property (nonatomic, copy) NSArray *affirmations;
+@property (nonatomic) NSInteger affirmationIndex;
+@property (nonatomic, strong) RYSTAffirmationLabel *leftAffirmation;
+@property (nonatomic, strong) RYSTAffirmationLabel *rightAffirmation;
+@property (nonatomic, strong) RYSTAffirmationLabel *centerAffirmation;
 
 @end
 
@@ -72,53 +90,101 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
   return [NSSet setWithObjects:@"session.running", @"deviceAuthorized", nil];
 }
 
-- (instancetype)initShouldDisplayIntro:(BOOL)shouldDisplayIntro
-{
-  self = [super initWithNibName:nil bundle:nil];
-  if (self) {
-    _shouldDisplayIntro = shouldDisplayIntro;
-    _shouldExplainView = shouldDisplayIntro;
-  }
-
-  return self;
-}
-
 - (void)viewDidLoad
 {
   [super viewDidLoad];
 
-  _previewView = [[RYSTCameraView alloc] initWithFrame:self.view.frame];
-  [self.view addSubview:_previewView];
+  _scrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];
+  _scrollView.showsVerticalScrollIndicator = NO;
+  _scrollView.backgroundColor = [UIColor whiteColor];
+  _scrollView.decelerationRate = UIScrollViewDecelerationRateFast;
+  _scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.view.bounds),
+                                       CGRectGetHeight(self.view.bounds) * kNumberOfOnboardingScreens);
+  _scrollView.delegate = self;
+  [self.view addSubview:_scrollView];
+
+  _currentScreenIndex = 0;
+
+  CGRect screenFrame = _scrollView.frame;
+
+  UIView *screen1 = [[UIView alloc] initWithFrame:screenFrame];
+  screen1.backgroundColor = [UIColor colorWithRed:174.0f/255.0f green:0.0f/255.0f blue:220.0f/255.0f alpha:1.0f];
+  [_scrollView addSubview:screen1];
+  screenFrame.origin.y += CGRectGetHeight(self.view.bounds);
+
+  RYSTAffirmationLabel *positiveLabel = [[RYSTAffirmationLabel alloc] init];
+  positiveLabel.translatesAutoresizingMaskIntoConstraints = NO;
+  positiveLabel.text = NSLocalizedString(@"STAY POSITIVE!", nil);
+  positiveLabel.rectColor = [UIColor whiteColor];
+  positiveLabel.textAlignment = NSTextAlignmentCenter;
+  [screen1 addSubview:positiveLabel];
+  [screen1 centerChildren:@[positiveLabel]];
+
+  UIImageView *upArrow1 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"up-arrow"]];
+  upArrow1.translatesAutoresizingMaskIntoConstraints = NO;
+  [screen1 addSubview:upArrow1];
+  [screen1 centerChildrenHorizontally:@[upArrow1]];
+  [screen1 convenientConstraintsWithVisualFormats:@[ @"V:[upArrow]-50-|",
+                                                     @"V:[positiveLabel(80)]",
+                                                     @"H:[positiveLabel(210)]" ]
+                                          options:0
+                                          metrics:nil
+                                         children:@{ @"upArrow" : upArrow1,
+                                                     @"positiveLabel" : positiveLabel }];
+
+  UIView *screen2 = [[UIView alloc] initWithFrame:screenFrame];
+  screen2.backgroundColor = [UIColor colorWithRed:63.0f/255.0f green:225.0f/255.0f blue:181.0f/255.0f alpha:1.0f];
+  [_scrollView addSubview:screen2];
+  screenFrame.origin.y += CGRectGetHeight(self.view.bounds);
+
+  UILabel *explanationLabel = [[UILabel alloc] init];
+  explanationLabel.translatesAutoresizingMaskIntoConstraints = NO;
+  explanationLabel.textColor = [UIColor whiteColor];
+  explanationLabel.font = [UIFont fontWithName:@"Avenir-Roman" size:22.0f];
+  explanationLabel.text = NSLocalizedString(@"Record yourself\nsaying a positive\naffirmation you see.", nil);
+  explanationLabel.numberOfLines = 0;
+  explanationLabel.textAlignment = NSTextAlignmentCenter;
+
+  UILabel *explanationLabel2 = [[UILabel alloc] init];
+  explanationLabel2.translatesAutoresizingMaskIntoConstraints = NO;
+  explanationLabel2.textColor = [UIColor whiteColor];
+  explanationLabel2.font = [UIFont fontWithName:@"Avenir-Roman" size:22.0f];
+  explanationLabel2.text = NSLocalizedString(@"Then, share it.", nil);
+  explanationLabel2.numberOfLines = 0;
+  explanationLabel2.textAlignment = NSTextAlignmentCenter;
+
+  UIImageView *upArrow2 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"up-arrow"]];
+  upArrow2.translatesAutoresizingMaskIntoConstraints = NO;
+
+  [screen2 addSubview:explanationLabel];
+  [screen2 addSubview:explanationLabel2];
+  [screen2 addSubview:upArrow2];
+  [screen2 centerChildren:@[explanationLabel2]];
+  [screen2 centerChildrenHorizontally:@[upArrow2, explanationLabel]];
+
+  [screen2 convenientConstraintsWithVisualFormats:@[ @"V:[upArrow]-50-|",
+                                                     @"V:[explanationLabel]-25-[explanationLabel2]" ]
+                                          options:0
+                                          metrics:nil
+                                         children:@{ @"upArrow" : upArrow2,
+                                                     @"explanationLabel" : explanationLabel,
+                                                     @"explanationLabel2" : explanationLabel2 }];
+
+  _previewView = [[RYSTCameraView alloc] initWithFrame:screenFrame];
+  [self.scrollView addSubview:_previewView];
 
   _recordButton = [[RYSTRecordButton alloc] initWithFrame:CGRectMake(0, 0, 60, 60)];
   [_recordButton addTarget:self action:@selector(toggleMovieRecording) forControlEvents:UIControlEventTouchUpInside];
   _recordButton.center = CGPointMake(self.view.center.x, CGRectGetHeight(self.view.frame) - 80);
-  [self.view addSubview:_recordButton];
+  [self.previewView addSubview:_recordButton];
 
-  _flipCameraButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.view.bounds) - 70, 30, 50, 50)];
-  [_flipCameraButton setBackgroundImage:[UIImage imageNamed:@"rotate-camera-orange"] forState:UIControlStateNormal];
-  [_flipCameraButton addTarget:self action:@selector(changeCamera) forControlEvents:UIControlEventTouchUpInside];
-  [self.view addSubview:_flipCameraButton];
+  _rightSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(rightSwipe)];
+  _rightSwipe.direction = UISwipeGestureRecognizerDirectionRight;
+  _rightSwipe.numberOfTouchesRequired = 1;
 
-  _pickAffirmationButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.view.bounds) - 70, CGRectGetHeight(self.view.bounds) - 70, 50, 50)];
-  [_pickAffirmationButton setBackgroundImage:[UIImage imageNamed:@"pointer-blue"] forState:UIControlStateNormal];
-  [_pickAffirmationButton addTarget:self action:@selector(presentAffirmationList) forControlEvents:UIControlEventTouchUpInside];
-  [self.view addSubview:_pickAffirmationButton];
-
-  _viewAffirmationsButton = [[UIButton alloc] initWithFrame:CGRectMake(20, CGRectGetHeight(self.view.bounds) - 65, 45, 45)];
-  [_viewAffirmationsButton setBackgroundImage:[UIImage imageNamed:@"user-yellow"] forState:UIControlStateNormal];
-  [_viewAffirmationsButton addTarget:self action:@selector(presentVideoGallery) forControlEvents:UIControlEventTouchUpInside];
-  [self.view addSubview:_viewAffirmationsButton];
-
-  _affirmationLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 24)];
-  _affirmationLabel.backgroundColor = [UIColor colorWithRed:174.0f/255.0f green:0.0f/255.0f blue:220.0f/255.0f alpha:1.0f];
-  _affirmationLabel.font = [UIFont fontWithName:@"Avenir-Roman" size:14.0f];
-  _affirmationLabel.textColor = [UIColor whiteColor];
-  _affirmationLabel.textAlignment = NSTextAlignmentCenter;
-  _affirmationLabel.text = NSLocalizedString(@"Pick an affirmation!", nil);
-  _affirmationLabel.alpha = 0.5f;
-  [self.view addSubview:_affirmationLabel];
-  
+  _leftSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(leftSwipe)];
+  _leftSwipe.direction = UISwipeGestureRecognizerDirectionRight;
+  _leftSwipe.numberOfTouchesRequired = 1;
 
   // Create the AVCaptureSession
   AVCaptureSession *session = [[AVCaptureSession alloc] init];
@@ -170,26 +236,15 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
   });
 
   self.isObserver = NO;
+  self.shouldDismissPreview = NO;
 
-  if (self.shouldDisplayIntro) {
-    RYSTIntroViewController *vc = [[RYSTIntroViewController alloc] init];
-    [self addChildViewController:vc];
-    [self.view addSubview:vc.view];
-    [vc didMoveToParentViewController:self];
-    vc.presenter = self;
-
-    _childViewController = vc;
-  } else {
-    [self beginFormOperationWithActivityCaption:@"Signing In..." alpha:1.0f];
-  }
+  _scrollView.contentOffset = CGPointMake(0, 0);
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
   [super viewWillDisappear:animated];
-  if (!self.shouldDisplayIntro) {
-    [self showCameraView];
-  }
+  [self showCameraView];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -237,6 +292,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
       });
     }]];
     [[self session] startRunning];
+    [self changeCamera];
   });
 }
 
@@ -285,7 +341,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 - (void)toggleMovieRecording
 {
-  if (self.affirmation) {
+  if (true) {
     [self.recordButton toggleRecording];
 
     [self.recordButton setEnabled:NO];
@@ -311,20 +367,11 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         [self.movieFileOutput stopRecording];
       }
     });
-  } else {
-    [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Whoops!", nil)
-                                message:NSLocalizedString(@"Looks like you need to pick an affirmation!", nil)
-                               delegate:nil
-                      cancelButtonTitle:NSLocalizedString(@"Lets do it!", nil)
-                      otherButtonTitles:nil, nil] show];
   }
 }
 
 - (void)changeCamera
 {
-  [self.flipCameraButton setEnabled:NO];
-  [self.recordButton setEnabled:NO];
-
   dispatch_async([self sessionQueue], ^{
     AVCaptureDevice *currentVideoDevice = [[self videoDeviceInput] device];
     AVCaptureDevicePosition preferredPosition = AVCaptureDevicePositionUnspecified;
@@ -332,13 +379,13 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
     switch (currentPosition) {
       case AVCaptureDevicePositionUnspecified:
-        preferredPosition = AVCaptureDevicePositionBack;
+        preferredPosition = AVCaptureDevicePositionFront;
         break;
       case AVCaptureDevicePositionBack:
         preferredPosition = AVCaptureDevicePositionFront;
         break;
       case AVCaptureDevicePositionFront:
-        preferredPosition = AVCaptureDevicePositionBack;
+        preferredPosition = AVCaptureDevicePositionFront;
         break;
     }
 
@@ -381,7 +428,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 {
   if (error) NSLog(@"%@", error);
   [self setLockInterfaceRotation:NO];
-  [self presentSaveVideo:outputFileURL];
+  self.videoURL = outputFileURL;
+  [self presentPreview];
 }
 
 #pragma mark Device Configuration
@@ -454,189 +502,236 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     }}];
 }
 
-#pragma mark presented and child return calls, special presenters
+#pragma mark UIScrollViewMethods
 
-- (void)presentAffirmationList
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
 {
-  RYSTPickAffirmationViewController *vc = [[RYSTPickAffirmationViewController alloc] initWithStyle:UITableViewStylePlain parent:self];
-  [self presentViewController:vc animated:YES completion:nil];
+  self.view.userInteractionEnabled = NO;
+
+  // if the user throws the screen with a gesture, just go whichever direction they wanted
+  // otherwise, we use the overlap to decide where to take them
+  if (velocity.y != 0) {
+    if (velocity.y > 0 && self.currentScreenIndex < kNumberOfOnboardingScreens - 1) {
+      self.currentScreenIndex++;
+    } else if (velocity.y < 0 && self.currentScreenIndex > 0) {
+      self.currentScreenIndex--;
+    }
+
+    targetContentOffset->y = self.currentScreenIndex * CGRectGetHeight(self.view.bounds);
+  } else {
+    CGFloat baseOffset = self.currentScreenIndex * CGRectGetHeight(self.view.bounds);
+    if (scrollView.contentOffset.y - baseOffset > kOverlapForRotation && self.currentScreenIndex > 0) {
+      self.currentScreenIndex++;
+    } else if (scrollView.contentOffset.y - baseOffset < -kOverlapForRotation && self.currentScreenIndex < kNumberOfOnboardingScreens - 1) {
+      self.currentScreenIndex--;
+    }
+
+    [scrollView setContentOffset:CGPointMake(0, self.currentScreenIndex * CGRectGetHeight(self.view.bounds)) animated:YES];
+  }
 }
 
-- (void)presentVideoGallery
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
-  RYSTAccountViewController *vc = [[RYSTAccountViewController alloc] init];
+  self.view.userInteractionEnabled = NO;
+}
+
+- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
+{
+  self.view.userInteractionEnabled = NO;
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+  self.view.userInteractionEnabled = YES;
+  if (self.currentScreenIndex == 2) [self updateAfterIntro];
+}
+
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
+{
+  self.view.userInteractionEnabled = YES;
+  if (self.currentScreenIndex == 2) [self updateAfterIntro];
+}
+
+#pragma mark action methods
+
+- (void)updateAfterIntro
+{
+  [self.scrollView removeFromSuperview];
+  self.previewView.frame = self.view.bounds;
+  [self.view addSubview:self.previewView];
+
+  [self.apiClient getAffirmations:@10 completion:^(NSArray *result, NSError *error) {
+    if (result) {
+      self.affirmations = result;
+      [self initializeAffirmations];
+    } else {
+      [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Sorry!", nil)
+                                  message:NSLocalizedString(@"Looks like we're having difficulties, come back and try again later.", nil)
+                                 delegate:nil
+                        cancelButtonTitle:NSLocalizedString(@"Dismiss", nil)
+                        otherButtonTitles:nil, nil] show];
+    }
+  }];
+}
+
+- (void)presentPreview
+{
+  NSString *affirmationText = ((RYSTAffirmation *)self.affirmations[self.affirmationIndex]).text;
+  RYSTVideoPreviewViewController *vc = [[RYSTVideoPreviewViewController alloc] initWithURL:self.videoURL
+                                                                           affirmationText:affirmationText];
   vc.presenter = self;
-  [self presentViewController:vc animated:YES completion:nil];
+  self.previewChild = vc;
+  [self presentChild:vc];
 }
 
-- (void)presentSaveVideo:(NSURL *)url
+- (void)presentChild:(UIViewController *)child
 {
-  _videoURL = url;
-  RYSTSaveVideoViewController *vc = [[RYSTSaveVideoViewController alloc] initWithURLString:url presenter:self];
-  [self addChildViewController:vc];
-  [self.view addSubview:vc.view];
-  [vc didMoveToParentViewController:self];
-
-  _childViewController = vc;
-
-  // animate it
-  vc.view.frame = CGRectMake(0, CGRectGetHeight(self.view.bounds), CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds));
+  [self addChildViewController:child];
+  [self.view addSubview:child.view];
+  [child didMoveToParentViewController:self];
+  CGFloat height = CGRectGetHeight(self.view.bounds);
+  CGFloat width = CGRectGetWidth(self.view.bounds);
+  child.view.frame = CGRectMake(0, height, width, height);
   [UIView animateWithDuration:0.3f
                    animations:^{
-                     vc.view.frame = CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds));
+                     child.view.frame = CGRectMake(0, 0, width, height);
+                   } completion:^(BOOL finished) {
+                     if (self.shouldDismissPreview) {
+                       self.shouldDismissPreview = NO;
+                       [self dismissChild:self.previewChild];
+                       self.previewChild = nil;
+                     }
                    }];
 }
 
-- (void)dismissChild:(UIViewController *)child animated:(BOOL)animated
+- (void)dismissChild:(UIViewController *)child
 {
-  if (child == self.childViewController) {
-    if (animated) {
-      [UIView animateWithDuration:0.3f
-                       animations:^{
-                         self.childViewController.view.layer.transform = CATransform3DScale(CATransform3DIdentity,
-                                                                                            0.01f,
-                                                                                            0.01f,
-                                                                                            1.0f);
-                       } completion:^(BOOL finished) {
-                         [self.childViewController willMoveToParentViewController:nil];
-                         [self.childViewController.view removeFromSuperview];
-                         [self.childViewController removeFromParentViewController];
-                         [self showCameraView];
-                         if (self.shouldExplainView) {
-                           [self explainView];
-                         }
-                       }];
-    } else {
-      [self.childViewController willMoveToParentViewController:nil];
-      [self.childViewController.view removeFromSuperview];
-      [self.childViewController removeFromParentViewController];
-      [self showCameraView];
-    }
-  } // abort if not
+  CGFloat height = CGRectGetHeight(self.view.bounds);
+  CGFloat width = CGRectGetWidth(self.view.bounds);
+  [UIView animateWithDuration:0.3f
+                   animations:^{
+                     child.view.frame = CGRectMake(0, height, width, height);
+                   } completion:^(BOOL finished) {
+                     [child willMoveToParentViewController:nil];
+                     [child.view removeFromSuperview];
+                     [child removeFromParentViewController];
+                     [self showCameraView];
+                   }];
 }
 
-- (void)explainView
-{
-  // only explain the first time
-  self.shouldExplainView = NO;
-
-  self.view.userInteractionEnabled = NO;
-  UILabel *explanationLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 120, 80)];
-  explanationLabel.backgroundColor = [UIColor whiteColor];
-  explanationLabel.font = [UIFont fontWithName:@"Avenir-Roman" size:14.0f];
-  explanationLabel.textColor = [UIColor blackColor];
-  explanationLabel.numberOfLines = 0;
-  explanationLabel.textAlignment = NSTextAlignmentCenter;
-  explanationLabel.layer.cornerRadius = 20.0f;
-  explanationLabel.clipsToBounds = YES;
-  [self.view addSubview:explanationLabel];
-
-  // show the explanations one at a time
-  explanationLabel.text = NSLocalizedString(@"Your selected affirmation shows up here", nil);
-  explanationLabel.center = CGPointMake(70, 70);
-
-  [UIView animateWithDuration:2.0f delay:2.0f options:0 animations:^{
-    explanationLabel.alpha = 0.0f;
-  } completion:^(BOOL finished) {
-    explanationLabel.text = NSLocalizedString(@"Select affirmations by clicking here", nil);
-    explanationLabel.center = CGPointMake(CGRectGetWidth(self.view.bounds) - 70, CGRectGetHeight(self.view.bounds) - 140);
-    explanationLabel.alpha = 1.0f;
-    [UIView animateWithDuration:2.0f delay:1.8f options:0 animations:^{
-      explanationLabel.alpha = 0.0f;
-    } completion:^(BOOL finished) {
-      explanationLabel.text = NSLocalizedString(@"Go here to view videos and account information", nil);
-      explanationLabel.center = CGPointMake(70, CGRectGetHeight(self.view.bounds) - 140);
-      explanationLabel.alpha = 1.0f;
-      [UIView animateWithDuration:2.0f delay:1.8f options:0 animations:^{
-        explanationLabel.alpha = 0.0f;
-      } completion:^(BOOL finished) {
-        [explanationLabel removeFromSuperview];
-        self.view.userInteractionEnabled = YES;
-      }];
-    }];
-  }];
-}
-
-- (void)dismissAffirmationTable:(RYSTAffirmation *)affirmation
-{
-  if (affirmation) {
-    self.affirmation = affirmation;
-    self.affirmationLabel.text = affirmation.text;
-  }
-  [self dismissViewControllerAnimated:YES completion:^{
-    [self showCameraView];
-  }];
-}
-
-- (void)dismissAccount
-{
-  [self dismissViewControllerAnimated:YES completion:^{
-    [self showCameraView];
-  }];
-}
-
-- (void)dismissSaveVideoWithSave:(BOOL)shouldSave
+- (void)dismissPreviewShouldSave:(BOOL)shouldSave
 {
   if (shouldSave) {
-    __weak typeof(self) weakSelf = self;
-    NSData *videoData = [NSData dataWithContentsOfURL:self.videoURL];
-    [weakSelf beginFormOperationWithActivityCaption:NSLocalizedString(@"Saving Video...", nil) alpha:1.0f];
-    [self.apiClient uploadVideo:videoData completion:^(RYSTUploadResponse *result, NSError *error) {
-      if (result) {
-        [weakSelf.apiClient addVideoWithURL:result.url affirmationId:weakSelf.affirmation.affirmationIdentifier completion:^(RYSTVideo *result, NSError *error) {
-          if (result) [weakSelf presentSaveSucessBanner];
-          [weakSelf cleanupUploadRequest];
-        }];
-      } else {
-        [weakSelf cleanupUploadRequest];
-      }
-    }];
-  }
-  
-  [self dismissChild:self.childViewController animated:!shouldSave];
-}
-
-- (void)cleanupUploadRequest
-{
-  [self finishFormOperation];
-  UIBackgroundTaskIdentifier backgroundRecordingID = [self backgroundRecordingID];
-  [self setBackgroundRecordingID:UIBackgroundTaskInvalid];
-  [[NSFileManager defaultManager] removeItemAtURL:self.videoURL error:nil];
-  if (backgroundRecordingID != UIBackgroundTaskInvalid) [[UIApplication sharedApplication] endBackgroundTask:backgroundRecordingID];
-  self.videoURL = nil;
-}
-
-- (void)presentSaveSucessBanner
-{
-  RYSTNiceBanner *banner = [[RYSTNiceBanner alloc] initWithFrame:CGRectMake(0,
-                                                                            self.view.center.y - kBannerHeight/2,
-                                                                            CGRectGetWidth(self.view.bounds),
-                                                                            kBannerHeight)
-                                                         message:NSLocalizedString(@"Nice!", nil)];
-  [self.view addSubview:banner];
-  [UIView animateWithDuration:1.0f
-                        delay:1.0f
-                      options:0
-                   animations:^{
-                     banner.alpha = 0.0f;
-                   } completion:^(BOOL finished) {
-                     [banner removeFromSuperview];
-                   }];
-}
-
-- (void)doneBeingPresented
-{
-  if (!self.shouldDisplayIntro) {
-    [self finishFormOperation];
+    self.shouldDismissPreview = YES;
+    [self saveVideo];
+  } else {
+    self.videoURL = nil;
+    [self dismissChild:self.previewChild];
+    self.previewChild = nil;
   }
 }
 
-- (void)signOut
+- (void)saveVideo
 {
-  // can only be called from account
-  [self dismissViewControllerAnimated:YES completion:^{
-    [self dismissViewControllerAnimated:YES completion:nil];
+  // completion should remove the other VC
+  RYSTLoadAndRepeatViewController *vc = [[RYSTLoadAndRepeatViewController alloc] initWithURL:self.videoURL];
+  vc.presenter = self;
+  self.saveChild = vc;
+  [self presentChild:vc];
+}
+
+- (void)dismissAndRepeat
+{
+  [self dismissChild:self.saveChild];
+  self.saveChild = nil;
+}
+
+- (void)rightSwipe:(UISwipeGestureRecognizer *)gesture
+{
+  self.view.userInteractionEnabled = NO;
+  [UIView animateWithDuration:0.3f animations:^{
+    self.centerAffirmation.center = CGPointMake(self.view.center.x + CGRectGetWidth(self.view.bounds), self.view.center.y);
+    self.leftAffirmation.center = self.view.center;
+  } completion:^(BOOL finished) {
+    [self.rightAffirmation removeFromSuperview];
+    self.rightAffirmation = self.centerAffirmation;
+    self.centerAffirmation = self.leftAffirmation;
+    self.affirmationIndex = (self.affirmationIndex - 1) % 10;
+
+    [self createLeftAffirmation];
   }];
+}
+
+- (void)leftSwipe:(UISwipeGestureRecognizer *)gesture
+{
+  self.view.userInteractionEnabled = NO;
+  [UIView animateWithDuration:0.3f animations:^{
+    self.centerAffirmation.center = CGPointMake(self.view.center.x - CGRectGetWidth(self.view.bounds), self.view.center.y);
+    self.rightAffirmation.center = self.view.center;
+  } completion:^(BOOL finished) {
+    [self.leftAffirmation removeFromSuperview];
+    self.leftAffirmation = self.centerAffirmation;
+    self.centerAffirmation = self.rightAffirmation;
+    self.affirmationIndex = (self.affirmationIndex + 1) % 10;
+
+    [self createRightAffirmation];
+  }];
+}
+
+- (void)initializeAffirmations
+{
+  self.affirmationIndex = 0;
+
+  _centerAffirmation = [[RYSTAffirmationLabel alloc] initWithFrame:CGRectMake(0, 0, 210, 80)];
+  _centerAffirmation.text = ((RYSTAffirmation *)self.affirmations[0]).text;
+  _centerAffirmation.rectColor = [UIColor colorWithRed:174.0f/255.0f green:0.0f/255.0f blue:220.0f/255.0f alpha:1.0f];
+  _centerAffirmation.textAlignment = NSTextAlignmentCenter;
+
+  [self.previewView addSubview:_centerAffirmation];
+
+  [_centerAffirmation addGestureRecognizer:self.rightSwipe];
+  [_centerAffirmation addGestureRecognizer:self.leftSwipe];
+
+  _centerAffirmation.center = self.previewView.center;
+
+  [self createLeftAffirmation];
+  [self createRightAffirmation];
+}
+
+- (void)createRightAffirmation
+{
+  _rightAffirmation = [[RYSTAffirmationLabel alloc] initWithFrame:CGRectMake(0, 0, 210, 80)];
+  _rightAffirmation.text = ((RYSTAffirmation *)self.affirmations[(self.affirmationIndex + 1) % 10]).text;
+  _rightAffirmation.rectColor = [UIColor colorWithRed:174.0f/255.0f green:0.0f/255.0f blue:220.0f/255.0f alpha:1.0f];
+  _rightAffirmation.textAlignment = NSTextAlignmentCenter;
+  [self.previewView addSubview:_rightAffirmation];
+
+  [_rightAffirmation addGestureRecognizer:self.rightSwipe];
+  [_rightAffirmation addGestureRecognizer:self.leftSwipe];
+  _rightAffirmation.center = CGPointMake(self.view.center.x + CGRectGetWidth(self.view.bounds), self.view.center.y);
+}
+
+- (void)createLeftAffirmation
+{
+  _leftAffirmation = [[RYSTAffirmationLabel alloc] initWithFrame:CGRectMake(0, 0, 210, 80)];
+  _leftAffirmation.text = ((RYSTAffirmation *)self.affirmations[9]).text;
+  _leftAffirmation.textAlignment = NSTextAlignmentCenter;
+  _leftAffirmation.rectColor = [UIColor colorWithRed:174.0f/255.0f green:0.0f/255.0f blue:220.0f/255.0f alpha:1.0f];
+  [self.previewView addSubview:_leftAffirmation];
+
+  [_leftAffirmation addGestureRecognizer:self.rightSwipe];
+  [_leftAffirmation addGestureRecognizer:self.leftSwipe];
+  _leftAffirmation.center = CGPointMake(self.view.center.x - CGRectGetWidth(self.view.bounds), self.view.center.y);
+}
+
+- (void)removeAffirmations
+{
+  if (self.centerAffirmation) [self.centerAffirmation removeFromSuperview];
+  self.centerAffirmation = nil;
+  if (self.rightAffirmation) [self.rightAffirmation removeFromSuperview];
+  self.rightAffirmation = nil;
+  if (self.leftAffirmation) [self.leftAffirmation removeFromSuperview];
+  self.leftAffirmation = nil;
 }
 
 @end

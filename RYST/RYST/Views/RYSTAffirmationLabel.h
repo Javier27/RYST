@@ -10,4 +10,6 @@
 
 @interface RYSTAffirmationLabel : UILabel
 
+@property (nonatomic, strong) UIColor *rectColor;
+
 @end

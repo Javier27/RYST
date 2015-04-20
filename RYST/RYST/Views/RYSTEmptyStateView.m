@@ -17,24 +17,24 @@
 {
   self = [super initWithFrame:frame];
   if (self) {
-    self.backgroundColor = [UIColor colorWithRed:0.92 green:0.92 blue:0.92 alpha:1.0f];
+    self.backgroundColor = [UIColor colorWithRed:63.0f/255.0f green:225.0f/255.0f blue:181.0f/255.0f alpha:1.0f];
 
     RYSTActivityIndicatorView *activityIndicatorView = [RYSTActivityIndicatorView new];
     [activityIndicatorView startAnimating];
     [self addSubview:activityIndicatorView];
 
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 280, 50)];
     label.text = activityCaption;
     label.numberOfLines = 0;
     label.textAlignment = NSTextAlignmentCenter;
     label.preferredMaxLayoutWidth = 192.0f;
-    label.textColor = [UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:1.0];
-    label.font = [UIFont fontWithName:@"Avenir-Heavy" size:14.0f];
+    label.textColor = [UIColor whiteColor];
+    label.font = [UIFont fontWithName:@"Avenir-Roman" size:20.0f];
     [label sizeToFit];
     [self addSubview:label];
 
-    activityIndicatorView.center = self.center;
-    label.center = CGPointMake(self.center.x, self.center.y + 40);
+    activityIndicatorView.center = CGPointMake(self.center.x, self.center.y - 60);
+    label.center = CGPointMake(self.center.x, self.center.y + 10);
   }
 
   return self;

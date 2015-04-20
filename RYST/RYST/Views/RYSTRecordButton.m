@@ -13,7 +13,6 @@
 
 @property (nonatomic) BOOL isRecording;
 @property (nonatomic, strong) UIButton *innerView;
-@property (nonatomic, strong) UIButton *playView;
 
 @end
 
@@ -26,17 +25,13 @@
     _isRecording = NO;
 
     self.layer.cornerRadius = CGRectGetWidth(frame)/2;
-    self.backgroundColor = [UIColor whiteColor];
+    self.backgroundColor = [UIColor darkGrayColor];
+    self.alpha = 0.85f;
 
     _innerView = [[UIButton alloc] initWithFrame:CGRectMake(3, 3, CGRectGetWidth(frame) - 6, CGRectGetHeight(frame) - 6)];
-    _innerView.backgroundColor = [UIColor blackColor];
+    _innerView.backgroundColor = [UIColor lightGrayColor];
     _innerView.layer.cornerRadius = CGRectGetWidth(frame)/2 - 3;
     [self addSubview:_innerView];
-
-    _playView = [[UIButton alloc] initWithFrame:CGRectMake(5, 5, CGRectGetWidth(frame) - 10, CGRectGetHeight(frame) - 10)];
-    _playView.backgroundColor = [UIColor redColor];
-    _playView.layer.cornerRadius = CGRectGetWidth(frame)/2 - 5;
-    [self addSubview:_playView];
   }
 
   return self;
@@ -45,27 +40,13 @@
 - (void)toggleRecording
 {
   self.isRecording = !self.isRecording;
-  if (self.isRecording) {
-    [UIView animateWithDuration:0.3f
-                     animations:^{
-                       self.playView.layer.transform = CATransform3DScale(CATransform3DIdentity, 0.6, 0.6, 1.0);
-                     } completion:^(BOOL finished) {
-                       self.playView.layer.cornerRadius = 5.0f;
-                     }];
-  } else {
-    [UIView animateWithDuration:0.3f
-                     animations:^{
-                       self.playView.layer.transform = CATransform3DIdentity;
-                       self.playView.layer.cornerRadius = CGRectGetWidth(self.frame)/2 - 5;
-                     }];
-  }
+  self.backgroundColor = self.isRecording ? [UIColor colorWithRed:174.0f/255.0f green:0.0f/255.0f blue:220.0f/255.0f alpha:1.0f] : [UIColor darkGrayColor];
 }
 
 - (void)addTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents
 {
   [super addTarget:target action:action forControlEvents:controlEvents];
   [self.innerView addTarget:target action:action forControlEvents:controlEvents];
-  [self.playView addTarget:target action:action forControlEvents:controlEvents];
 }
 
 @end

@@ -2,24 +2,16 @@
 //  RYSTVideoViewController.h
 //  RYST
 //
-//  Created by Richie Davis on 4/15/15.
+//  Created by Richie Davis on 4/20/15.
 //  Copyright (c) 2015 Vissix. All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
 #import "RYSTBaseViewController.h"
-@class RYSTAffirmation;
 
 @interface RYSTVideoViewController : RYSTBaseViewController
 
-// this maybe should be a protocol and I should be assigning this as a delegate
-// pattern but leaving for now for simplicity, gets the job done
-- (void)dismissChild:(UIViewController *)child animated:(BOOL)animated;
-- (void)dismissAffirmationTable:(RYSTAffirmation *)affirmation;
-- (void)dismissAccount;
-- (void)dismissSaveVideoWithSave:(BOOL)shouldSave;
-- (void)signOut;
-
-- (void)doneBeingPresented;
-- (instancetype)initShouldDisplayIntro:(BOOL)shouldDisplayIntro;
+- (void)dismissAndRepeat;
+- (void)dismissPreviewShouldSave:(BOOL)shouldSave;
 
 @end

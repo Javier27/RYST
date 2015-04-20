@@ -30,7 +30,7 @@
 
 - (id)init
 {
-  return [self initWithFrame:CGRectMake(0.0f, 0.0f, 32.0f, 32.0f)];
+  return [self initWithFrame:CGRectMake(0.0f, 0.0f, 45.0f, 45.0f)];
 }
 
 @end
