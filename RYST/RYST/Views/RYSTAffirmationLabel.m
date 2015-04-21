@@ -7,15 +7,40 @@
 //
 
 #import "RYSTAffirmationLabel.h"
+#import "UIView+RJDConvenience.h"
+
+@interface RYSTAffirmationLabel ()
+
+@property (nonatomic, strong) UILabel *textLabel;
+
+@end
 
 @implementation RYSTAffirmationLabel
 
+- (instancetype)initWithFrame:(CGRect)frame
+{
+  self = [super initWithFrame:frame];
+  if (self) {
+    self.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.0f];
+
+    _textLabel = [[UILabel alloc] init];
+    _textLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:_textLabel];
+    [self centerChildren:@[_textLabel]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:_textLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeHeight multiplier:1.0f constant:0.0f]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:_textLabel attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:1.0f constant:-50.0f]];
+  }
+
+  return self;
+}
+
 - (void)setText:(NSString *)text
 {
-  [super setText:text];
-  self.font = [UIFont fontWithName:@"Avenir-BlackOblique" size:20.0f];
-  self.textColor = [UIColor whiteColor];
-  self.numberOfLines = 0;
+  self.textLabel.text = text;
+  self.textLabel.font = [UIFont fontWithName:@"Avenir-BlackOblique" size:20.0f];
+  self.textLabel.textColor = [UIColor whiteColor];
+  self.textLabel.numberOfLines = 0;
+  self.textLabel.textAlignment = NSTextAlignmentCenter;
 }
 
 - (void)drawRect:(CGRect)rect

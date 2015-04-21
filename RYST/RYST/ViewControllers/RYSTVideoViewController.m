@@ -113,7 +113,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
   positiveLabel.translatesAutoresizingMaskIntoConstraints = NO;
   positiveLabel.text = NSLocalizedString(@"STAY POSITIVE!", nil);
   positiveLabel.rectColor = [UIColor whiteColor];
-  positiveLabel.textAlignment = NSTextAlignmentCenter;
   [screen1 addSubview:positiveLabel];
   [screen1 centerChildren:@[positiveLabel]];
 

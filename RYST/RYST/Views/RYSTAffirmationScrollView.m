@@ -59,7 +59,6 @@ static CGFloat kAffirmationWidth = 220;
   _centerAffirmation = [[RYSTAffirmationLabel alloc] initWithFrame:CGRectMake(0, 0, kAffirmationWidth, kAffirmationHeight)];
   _centerAffirmation.text = ((RYSTAffirmation *)self.affirmations[0]).text;
   _centerAffirmation.rectColor = [UIColor colorWithRed:174.0f/255.0f green:0.0f/255.0f blue:220.0f/255.0f alpha:1.0f];
-  _centerAffirmation.textAlignment = NSTextAlignmentCenter;
   [self addSubview:_centerAffirmation];
 
   _centerAffirmation.center = CGPointMake(1.5 * CGRectGetWidth(self.frame), CGRectGetHeight(self.frame)/2);
@@ -75,7 +74,6 @@ static CGFloat kAffirmationWidth = 220;
   _rightAffirmation = [[RYSTAffirmationLabel alloc] initWithFrame:CGRectMake(0, 0, kAffirmationWidth, kAffirmationHeight)];
   _rightAffirmation.text = ((RYSTAffirmation *)self.affirmations[index]).text;
   _rightAffirmation.rectColor = [UIColor colorWithRed:174.0f/255.0f green:0.0f/255.0f blue:220.0f/255.0f alpha:1.0f];
-  _rightAffirmation.textAlignment = NSTextAlignmentCenter;
   [self addSubview:_rightAffirmation];
 
   _rightAffirmation.center = CGPointMake(2.5 * CGRectGetWidth(self.frame), CGRectGetHeight(self.frame)/2);
@@ -87,7 +85,6 @@ static CGFloat kAffirmationWidth = 220;
 
   _leftAffirmation = [[RYSTAffirmationLabel alloc] initWithFrame:CGRectMake(0, 0, kAffirmationWidth, kAffirmationHeight)];
   _leftAffirmation.text = ((RYSTAffirmation *)self.affirmations[index]).text;
-  _leftAffirmation.textAlignment = NSTextAlignmentCenter;
   _leftAffirmation.rectColor = [UIColor colorWithRed:174.0f/255.0f green:0.0f/255.0f blue:220.0f/255.0f alpha:1.0f];
   [self addSubview:_leftAffirmation];
 

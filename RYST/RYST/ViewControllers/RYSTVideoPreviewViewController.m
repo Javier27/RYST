@@ -65,7 +65,6 @@
 
   RYSTAffirmationLabel *affirmation = [[RYSTAffirmationLabel alloc] initWithFrame:CGRectMake(0, 0, 210, 80)];
   affirmation.text = self.affirmationText;
-  affirmation.textAlignment = NSTextAlignmentCenter;
   affirmation.center = self.view.center;
   affirmation.rectColor = [UIColor colorWithRed:174.0f/255.0f green:0.0f/255.0f blue:220.0f/255.0f alpha:1.0f];
   [self.view addSubview:affirmation];

@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface RYSTAffirmationLabel : UILabel
+@interface RYSTAffirmationLabel : UIView
 
 @property (nonatomic, strong) UIColor *rectColor;
+@property (nonatomic, strong) NSString *text;
 
 @end
