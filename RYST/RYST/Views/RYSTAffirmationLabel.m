@@ -20,8 +20,6 @@
 
 - (void)drawRect:(CGRect)rect
 {
-  [super drawRect:rect];
-
   UIBezierPath *path = [[UIBezierPath alloc] init];
   CGFloat minX = CGRectGetMinX(self.bounds);
   CGFloat minY = CGRectGetMinY(self.bounds);
@@ -37,8 +35,10 @@
 
   [path closePath];
 
-  [[self.rectColor colorWithAlphaComponent:0.5f] setFill];
+  [[self.rectColor colorWithAlphaComponent:0.4f] setFill];
   [path fill];
+
+  [super drawRect:rect];
 }
 
 @end

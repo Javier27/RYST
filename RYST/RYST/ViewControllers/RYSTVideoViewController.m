@@ -23,6 +23,8 @@
 #import "UIView+RJDConvenience.h"
 #import "UILabel+FSHighlightAnimationAdditions.h"
 
+#import "RYSTAffirmationScrollView.h"
+
 #import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 
@@ -40,6 +42,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 @property (nonatomic, strong) UIViewController *previewChild;
 @property (nonatomic, strong) UIViewController *saveChild;
+@property (nonatomic, strong) RYSTAffirmationScrollView *affirmationScrollView;
 
 @property (nonatomic) BOOL shouldDisplayIntro;
 @property (nonatomic) BOOL shouldExplainView;
@@ -67,14 +70,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 @property (nonatomic) BOOL isObserver;
 @property (nonatomic) BOOL shouldDismissPreview;
 
-@property (nonatomic, strong) UISwipeGestureRecognizer *rightSwipe;
-@property (nonatomic, strong) UISwipeGestureRecognizer *leftSwipe;
-
 @property (nonatomic, copy) NSArray *affirmations;
-@property (nonatomic) NSInteger affirmationIndex;
-@property (nonatomic, strong) RYSTAffirmationLabel *leftAffirmation;
-@property (nonatomic, strong) RYSTAffirmationLabel *rightAffirmation;
-@property (nonatomic, strong) RYSTAffirmationLabel *centerAffirmation;
+@property (nonatomic) BOOL errorOccurred;
 
 @end
 
@@ -178,14 +175,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
   _recordButton.center = CGPointMake(self.view.center.x, CGRectGetHeight(self.view.frame) - 80);
   [self.previewView addSubview:_recordButton];
 
-  _rightSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(rightSwipe)];
-  _rightSwipe.direction = UISwipeGestureRecognizerDirectionRight;
-  _rightSwipe.numberOfTouchesRequired = 1;
-
-  _leftSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(leftSwipe)];
-  _leftSwipe.direction = UISwipeGestureRecognizerDirectionRight;
-  _leftSwipe.numberOfTouchesRequired = 1;
-
   // Create the AVCaptureSession
   AVCaptureSession *session = [[AVCaptureSession alloc] init];
   self.session = session;
@@ -237,6 +226,18 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
   self.isObserver = NO;
   self.shouldDismissPreview = NO;
+  self.errorOccurred = NO;
+
+  [self.apiClient getAffirmations:@10 completion:^(NSArray *result, NSError *error) {
+    if (result) {
+      self.affirmations = result;
+      self.affirmationScrollView = [[RYSTAffirmationScrollView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 80)
+                                                                       affirmations:self.affirmations];
+      self.affirmationScrollView.center = CGPointMake(self.view.center.x, self.view.center.y - 50);
+    } else {
+      self.errorOccurred = YES;
+    }
+  }];
 
   _scrollView.contentOffset = CGPointMake(0, 0);
 }
@@ -560,23 +561,20 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
   self.previewView.frame = self.view.bounds;
   [self.view addSubview:self.previewView];
 
-  [self.apiClient getAffirmations:@10 completion:^(NSArray *result, NSError *error) {
-    if (result) {
-      self.affirmations = result;
-      [self initializeAffirmations];
-    } else {
-      [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Sorry!", nil)
-                                  message:NSLocalizedString(@"Looks like we're having difficulties, come back and try again later.", nil)
-                                 delegate:nil
-                        cancelButtonTitle:NSLocalizedString(@"Dismiss", nil)
-                        otherButtonTitles:nil, nil] show];
-    }
-  }];
+  [self.previewView addSubview:self.affirmationScrollView];
+
+  if (self.errorOccurred) {
+    [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Sorry!", nil)
+                                message:NSLocalizedString(@"Looks like we're having difficulties loading the affirmations, come back and try again later.", nil)
+                               delegate:nil
+                      cancelButtonTitle:NSLocalizedString(@"Dismiss", nil)
+                      otherButtonTitles:nil, nil] show];
+  }
 }
 
 - (void)presentPreview
 {
-  NSString *affirmationText = ((RYSTAffirmation *)self.affirmations[self.affirmationIndex]).text;
+  NSString *affirmationText = [self.affirmationScrollView currentAffirmation];
   RYSTVideoPreviewViewController *vc = [[RYSTVideoPreviewViewController alloc] initWithURL:self.videoURL
                                                                            affirmationText:affirmationText];
   vc.presenter = self;
@@ -644,94 +642,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 {
   [self dismissChild:self.saveChild];
   self.saveChild = nil;
-}
-
-- (void)rightSwipe:(UISwipeGestureRecognizer *)gesture
-{
-  self.view.userInteractionEnabled = NO;
-  [UIView animateWithDuration:0.3f animations:^{
-    self.centerAffirmation.center = CGPointMake(self.view.center.x + CGRectGetWidth(self.view.bounds), self.view.center.y);
-    self.leftAffirmation.center = self.view.center;
-  } completion:^(BOOL finished) {
-    [self.rightAffirmation removeFromSuperview];
-    self.rightAffirmation = self.centerAffirmation;
-    self.centerAffirmation = self.leftAffirmation;
-    self.affirmationIndex = (self.affirmationIndex - 1) % 10;
-
-    [self createLeftAffirmation];
-  }];
-}
-
-- (void)leftSwipe:(UISwipeGestureRecognizer *)gesture
-{
-  self.view.userInteractionEnabled = NO;
-  [UIView animateWithDuration:0.3f animations:^{
-    self.centerAffirmation.center = CGPointMake(self.view.center.x - CGRectGetWidth(self.view.bounds), self.view.center.y);
-    self.rightAffirmation.center = self.view.center;
-  } completion:^(BOOL finished) {
-    [self.leftAffirmation removeFromSuperview];
-    self.leftAffirmation = self.centerAffirmation;
-    self.centerAffirmation = self.rightAffirmation;
-    self.affirmationIndex = (self.affirmationIndex + 1) % 10;
-
-    [self createRightAffirmation];
-  }];
-}
-
-- (void)initializeAffirmations
-{
-  self.affirmationIndex = 0;
-
-  _centerAffirmation = [[RYSTAffirmationLabel alloc] initWithFrame:CGRectMake(0, 0, 210, 80)];
-  _centerAffirmation.text = ((RYSTAffirmation *)self.affirmations[0]).text;
-  _centerAffirmation.rectColor = [UIColor colorWithRed:174.0f/255.0f green:0.0f/255.0f blue:220.0f/255.0f alpha:1.0f];
-  _centerAffirmation.textAlignment = NSTextAlignmentCenter;
-
-  [self.previewView addSubview:_centerAffirmation];
-
-  [_centerAffirmation addGestureRecognizer:self.rightSwipe];
-  [_centerAffirmation addGestureRecognizer:self.leftSwipe];
-
-  _centerAffirmation.center = self.previewView.center;
-
-  [self createLeftAffirmation];
-  [self createRightAffirmation];
-}
-
-- (void)createRightAffirmation
-{
-  _rightAffirmation = [[RYSTAffirmationLabel alloc] initWithFrame:CGRectMake(0, 0, 210, 80)];
-  _rightAffirmation.text = ((RYSTAffirmation *)self.affirmations[(self.affirmationIndex + 1) % 10]).text;
-  _rightAffirmation.rectColor = [UIColor colorWithRed:174.0f/255.0f green:0.0f/255.0f blue:220.0f/255.0f alpha:1.0f];
-  _rightAffirmation.textAlignment = NSTextAlignmentCenter;
-  [self.previewView addSubview:_rightAffirmation];
-
-  [_rightAffirmation addGestureRecognizer:self.rightSwipe];
-  [_rightAffirmation addGestureRecognizer:self.leftSwipe];
-  _rightAffirmation.center = CGPointMake(self.view.center.x + CGRectGetWidth(self.view.bounds), self.view.center.y);
-}
-
-- (void)createLeftAffirmation
-{
-  _leftAffirmation = [[RYSTAffirmationLabel alloc] initWithFrame:CGRectMake(0, 0, 210, 80)];
-  _leftAffirmation.text = ((RYSTAffirmation *)self.affirmations[9]).text;
-  _leftAffirmation.textAlignment = NSTextAlignmentCenter;
-  _leftAffirmation.rectColor = [UIColor colorWithRed:174.0f/255.0f green:0.0f/255.0f blue:220.0f/255.0f alpha:1.0f];
-  [self.previewView addSubview:_leftAffirmation];
-
-  [_leftAffirmation addGestureRecognizer:self.rightSwipe];
-  [_leftAffirmation addGestureRecognizer:self.leftSwipe];
-  _leftAffirmation.center = CGPointMake(self.view.center.x - CGRectGetWidth(self.view.bounds), self.view.center.y);
-}
-
-- (void)removeAffirmations
-{
-  if (self.centerAffirmation) [self.centerAffirmation removeFromSuperview];
-  self.centerAffirmation = nil;
-  if (self.rightAffirmation) [self.rightAffirmation removeFromSuperview];
-  self.rightAffirmation = nil;
-  if (self.leftAffirmation) [self.leftAffirmation removeFromSuperview];
-  self.leftAffirmation = nil;
 }
 
 @end
