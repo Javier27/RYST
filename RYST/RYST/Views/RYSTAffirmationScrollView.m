@@ -11,6 +11,8 @@
 #import "RYSTAffirmation.h"
 
 static CGFloat kOverlapForRotation = 80;
+static CGFloat kAffirmationHeight = 100;
+static CGFloat kAffirmationWidth = 220;
 
 @interface RYSTAffirmationScrollView () <UIScrollViewDelegate>
 
@@ -54,7 +56,7 @@ static CGFloat kOverlapForRotation = 80;
 
 - (void)initializeAffirmations
 {
-  _centerAffirmation = [[RYSTAffirmationLabel alloc] initWithFrame:CGRectMake(0, 0, 210, 80)];
+  _centerAffirmation = [[RYSTAffirmationLabel alloc] initWithFrame:CGRectMake(0, 0, kAffirmationWidth, kAffirmationHeight)];
   _centerAffirmation.text = ((RYSTAffirmation *)self.affirmations[0]).text;
   _centerAffirmation.rectColor = [UIColor colorWithRed:174.0f/255.0f green:0.0f/255.0f blue:220.0f/255.0f alpha:1.0f];
   _centerAffirmation.textAlignment = NSTextAlignmentCenter;
@@ -70,7 +72,7 @@ static CGFloat kOverlapForRotation = 80;
 {
   int index = (self.affirmationIndex == self.affirmations.count - 1) ? 0 : self.affirmationIndex + 1;
 
-  _rightAffirmation = [[RYSTAffirmationLabel alloc] initWithFrame:CGRectMake(0, 0, 210, 80)];
+  _rightAffirmation = [[RYSTAffirmationLabel alloc] initWithFrame:CGRectMake(0, 0, kAffirmationWidth, kAffirmationHeight)];
   _rightAffirmation.text = ((RYSTAffirmation *)self.affirmations[index]).text;
   _rightAffirmation.rectColor = [UIColor colorWithRed:174.0f/255.0f green:0.0f/255.0f blue:220.0f/255.0f alpha:1.0f];
   _rightAffirmation.textAlignment = NSTextAlignmentCenter;
@@ -83,7 +85,7 @@ static CGFloat kOverlapForRotation = 80;
 {
   int index = self.affirmationIndex == 0 ? self.affirmations.count - 1 : self.affirmationIndex - 1;
 
-  _leftAffirmation = [[RYSTAffirmationLabel alloc] initWithFrame:CGRectMake(0, 0, 210, 80)];
+  _leftAffirmation = [[RYSTAffirmationLabel alloc] initWithFrame:CGRectMake(0, 0, kAffirmationWidth, kAffirmationHeight)];
   _leftAffirmation.text = ((RYSTAffirmation *)self.affirmations[index]).text;
   _leftAffirmation.textAlignment = NSTextAlignmentCenter;
   _leftAffirmation.rectColor = [UIColor colorWithRed:174.0f/255.0f green:0.0f/255.0f blue:220.0f/255.0f alpha:1.0f];

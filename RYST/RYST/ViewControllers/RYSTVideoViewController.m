@@ -228,10 +228,10 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
   self.shouldDismissPreview = NO;
   self.errorOccurred = NO;
 
-  [self.apiClient getAffirmations:@10 completion:^(NSArray *result, NSError *error) {
+  [self.apiClient getAffirmations:@20 completion:^(NSArray *result, NSError *error) {
     if (result) {
       self.affirmations = result;
-      self.affirmationScrollView = [[RYSTAffirmationScrollView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 80)
+      self.affirmationScrollView = [[RYSTAffirmationScrollView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 100)
                                                                        affirmations:self.affirmations];
       self.affirmationScrollView.center = CGPointMake(self.view.center.x, self.view.center.y - 50);
     } else {
